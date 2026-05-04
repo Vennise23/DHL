@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* Optional custom theme */
+@theme {
+  --font-sans: 'Instrument Sans', sans-serif;
+}
