@@ -27,6 +27,12 @@ return new class extends Migration
             $table->enum('source', ['email', 'telegram', 'teams', 'manual', 'rpa'])
                 ->default('manual');
 
+            // Category for better organization by AI
+            $table->string('category')->nullable();
+
+            // Assigned to
+            $table->foreignId('assigned_to')->nullable()->constrained('users');
+
             // Tracking users
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->nullable()->constrained('users');
@@ -63,6 +69,7 @@ return new class extends Migration
         Schema::create('rpa_logs', function (Blueprint $table) {
             $table->id();
 
+            $table->foreignId('incident_id')->constrained()->onDelete('cascade');
             $table->string('source_type'); // email, drive, telegram
             $table->integer('created_count')->default(0);
             $table->integer('duplicate_count')->default(0);

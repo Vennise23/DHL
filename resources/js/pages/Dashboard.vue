@@ -1,108 +1,112 @@
 <template>
-  <div class="min-h-screen bg-gray-100 p-6">
+    <div class="min-h-screen bg-gray-100 p-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">Incident Dashboard</h1>
 
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-bold">
-        Incident Dashboard
-      </h1>
-
-      <button
-        @click="logout"
-        class="bg-red-500 text-white px-4 py-2 rounded-lg"
-      >
-        Logout
-      </button>
-    </div>
-
-    <!-- Filters -->
-    <div class="bg-white p-4 rounded-xl shadow mb-6 flex gap-3">
-      <input
-        v-model="search"
-        placeholder="Search incidents..."
-        class="border px-3 py-2 rounded-lg w-full"
-      />
-
-      <select v-model="status" class="border px-3 py-2 rounded-lg">
-        <option value="">All Status</option>
-        <option value="draft">Draft</option>
-        <option value="reviewed">Reviewed</option>
-        <option value="published">Published</option>
-      </select>
-    </div>
-
-    <!-- Incident List -->
-    <div class="grid gap-4">
-
-      <div
-        v-for="incident in filteredIncidents"
-        :key="incident.id"
-        class="bg-white p-4 rounded-xl shadow hover:shadow-md cursor-pointer"
-        @click="openIncident(incident.id)"
-      >
-        <div class="flex justify-between">
-          <h2 class="font-semibold">
-            {{ incident.title }}
-          </h2>
-
-          <span
-            class="text-xs px-2 py-1 rounded"
-            :class="statusColor(incident.status)"
-          >
-            {{ incident.status }}
-          </span>
+            <button
+                @click="logout"
+                class="bg-red-500 text-white px-4 py-2 rounded-lg"
+            >
+                Logout
+            </button>
         </div>
 
-        <p class="text-sm text-gray-500 mt-2">
-          {{ incident.description }}
-        </p>
+        <!-- Filters -->
+        <div class="bg-white p-4 rounded-xl shadow mb-6 flex gap-3">
+            <input
+                v-model="search"
+                placeholder="Search incidents..."
+                class="border px-3 py-2 rounded-lg w-full"
+            />
 
-        <div class="text-xs text-gray-400 mt-2">
-          Created: {{ incident.date }}
+            <select v-model="status" class="border px-3 py-2 rounded-lg">
+                <option value="">All Status</option>
+                <option value="draft">Draft</option>
+                <option value="reviewed">Reviewed</option>
+                <option value="published">Published</option>
+            </select>
         </div>
-      </div>
 
+        <!-- Incident List -->
+        <div v-if="filteredIncidents.length > 0" class="grid gap-4">
+            <div
+                v-for="incident in filteredIncidents"
+                :key="incident.id"
+                class="bg-white p-4 rounded-xl shadow hover:shadow-md cursor-pointer"
+                @click="openIncident(incident.id)"
+            >
+                <div class="flex justify-between">
+                    <h2 class="font-semibold">
+                        {{ incident.title }}
+                    </h2>
+
+                    <span
+                        class="text-xs px-2 py-1 rounded"
+                        :class="statusColor(incident.status)"
+                    >
+                        {{ incident.status }}
+                    </span>
+                </div>
+
+                <p class="text-sm text-gray-500 mt-2">
+                    {{ incident.description }}
+                </p>
+
+                <div class="text-xs text-gray-400 mt-2">
+                    Created: {{ incident.created_at }}
+                </div>
+            </div>
+        </div>
+        <div v-else class="text-center text-gray-500">No incidents found.</div>
     </div>
-  </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
 
-const router = useRouter()
+const router = useRouter();
 
-const incidents = ref([])
-const search = ref('')
-const status = ref('')
+const incidents = ref([]);
+const search = ref("");
+const status = ref("");
 
 onMounted(async () => {
-  const res = await axios.get('/api/incidents')
-  incidents.value = res.data
-})
+    try {
+        const res = await axios.get("/api/incidents");
+
+        incidents.value = Array.isArray(res.data)
+            ? res.data
+            : res.data.data || [];
+    } catch (e) {
+        console.error("Failed to fetch incidents:", e);
+        incidents.value = [];
+    }
+});
 
 const filteredIncidents = computed(() => {
-  return incidents.value.filter(i => {
-    return (
-      i.title.toLowerCase().includes(search.value.toLowerCase()) &&
-      (status.value === '' || i.status === status.value)
-    )
-  })
-})
+    return incidents.value.filter((i) => {
+        return (
+            i.title.toLowerCase().includes(search.value.toLowerCase()) &&
+            (status.value === "" || i.status === status.value)
+        );
+    });
+});
 
 const openIncident = (id) => {
-  router.push(`/incident/${id}`)
-}
+    router.push(`/incident/${id}`);
+};
 
 const logout = () => {
-  localStorage.removeItem('token')
-  router.push('/')
-}
+    localStorage.removeItem("token");
+    router.push("/");
+};
 
 const statusColor = (s) => {
-  if (s === 'draft') return 'bg-yellow-200 text-yellow-800'
-  if (s === 'reviewed') return 'bg-blue-200 text-blue-800'
-  if (s === 'published') return 'bg-green-200 text-green-800'
-}
+    if (s === "draft") return "bg-yellow-200 text-yellow-800";
+    if (s === "reviewed") return "bg-blue-200 text-blue-800";
+    if (s === "published") return "bg-green-200 text-green-800";
+};
 </script>
