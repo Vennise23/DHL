@@ -4,3 +4,11 @@
 @theme {
   --font-sans: 'Instrument Sans', sans-serif;
 }
+
+.nav-item {
+  @apply flex items-center gap-2 p-2 rounded hover:bg-gray-200 transition;
+}
+
+button{
+  cursor:pointer
+}
