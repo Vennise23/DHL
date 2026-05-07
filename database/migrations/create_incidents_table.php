@@ -90,6 +90,8 @@ return new class extends Migration
             $table->text('ai_suggestions')->nullable();
 
             $table->boolean('conflict_flag')->default(false);
+            $table->text('ai_confidence')->nullable();
+            $table->text('ai_input_type')->nullable(); // text/image/mixed
 
             $table->timestamps();
         });

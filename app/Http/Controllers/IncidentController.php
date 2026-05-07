@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Incident;
 use Illuminate\Http\Request;
+use App\Services\IncidentService;
+
 
 class IncidentController extends Controller
 {
@@ -19,62 +21,79 @@ class IncidentController extends Controller
     public function show($id)
     {
         $incident = Incident::with([
-            'creator',
-            'assignee',
+            'histories',
+            'rpaLogs',
             'attachments',
-            'statusHistories'
+            'aiProcessing'
         ])->findOrFail($id);
+
+        return response()->json([
+            'id' => $incident->id,
+            'title' => $incident->title,
+            'description' => $incident->description,
+            'status' => $incident->status,
+            'priority' => $incident->priority,
+            'category' => $incident->category,
+            'source' => $incident->source,
+            'assigned_to' => $incident->assigned_to,
+
+            'histories' => $incident->histories,
+            'rpa_logs' => $incident->rpaLogs,
+            'attachments' => $incident->attachments,
+            'ai_processing' => $incident->aiProcessing,
+        ]);
+    }
+
+    // ✅ POST /api/incidents
+    public function store(Request $request, IncidentService $service)
+    {
+        $request->validate([
+            'title' => 'required|string',
+            'description' => 'nullable|string',
+            'attachments.*' => 'file|mimes:jpg,png,pdf,webp,docx|max:5120',
+        ]);
+
+        $incident = $service->create($request, $request->user()->id);
 
         return response()->json($incident);
     }
 
-    // ✅ POST /api/incidents
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string',
-            'description' => 'nullable|string',
-            'status' => 'in:draft,reviewed,published',
-            'priority' => 'in:low,medium,high,critical',
-            'source' => 'in:email,telegram,teams,manual,rpa',
-            'category' => 'nullable|string',
-            'assigned_to' => 'nullable|exists:users,id',
-            'created_by' => 'required|exists:users,id',
-        ]);
-
-        $incident = Incident::create($validated);
-
-        return response()->json($incident, 201);
-    }
-
     // ✅ PUT /api/incidents/{id}
-    public function update(Request $request, $id)
-    {
-        $incident = Incident::findOrFail($id);
-
-        $validated = $request->validate([
+    public function update(
+        Request $request,
+        $id,
+        IncidentService $service
+    ) {
+        $request->validate([
             'title' => 'sometimes|string',
             'description' => 'nullable|string',
+            'attachments.*' => 'file|mimes:jpg,png,pdf,webp,docx|max:5120',
+
             'status' => 'in:draft,reviewed,published',
             'priority' => 'in:low,medium,high,critical',
             'source' => 'in:email,telegram,teams,manual,rpa',
             'category' => 'nullable|string',
             'assigned_to' => 'nullable|exists:users,id',
-            'updated_by' => 'nullable|exists:users,id',
         ]);
 
-        $incident->update($validated);
+        $incident = $service->update(
+            $request,
+            $id,
+            $request->user()->id
+        );
 
         return response()->json($incident);
     }
 
     // ✅ DELETE /api/incidents/{id}
-    public function destroy($id)
+    public function destroy($id, IncidentService $service)
     {
         $incident = Incident::findOrFail($id);
-        $incident->delete();
+        $service->delete($id);
 
-        return response()->json(['message' => 'Deleted successfully']);
+        return response()->json([
+            'message' => 'Incident deleted successfully'
+        ]);
     }
 
     // Get Assigned Incidents for Staff

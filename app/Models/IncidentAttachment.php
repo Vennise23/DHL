@@ -12,8 +12,9 @@ class IncidentAttachment extends Model
 
     protected $fillable = [
         'incident_id',
+        'file_name',
         'file_path',
-        'file_type'
+        'file_type',
     ];
 
     public function incident()

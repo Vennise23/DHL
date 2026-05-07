@@ -5,7 +5,7 @@
     <SideMenu v-if="!isLoginPage" />
 
     <!-- MAIN CONTENT -->
-    <div class="flex-1 overflow-auto">
+    <div id="app-scroll" class="flex-1 overflow-auto">
       <router-view />
     </div>
 

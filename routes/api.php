@@ -8,6 +8,13 @@ use App\Http\Controllers\AIController;
 
 // User Authentication
 Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me', [UserController::class, 'me']);
+    Route::put('/me', [UserController::class, 'update']);
+});
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    Route::get('/users', [UserController::class, 'index']);
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -61,5 +68,5 @@ Route::middleware('auth:sanctum')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware('throttle:10,1')->group(function () {
-    Route::post('/ai/categorize', [AIController::class, 'categorize']);
+    Route::post('/ai/process', [AIController::class, 'process']);
 });

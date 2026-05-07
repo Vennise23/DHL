@@ -34,13 +34,24 @@ class Incident extends Model
         return $this->belongsTo(User::class, 'assigned_to');
     }
 
+    
+    public function histories()
+    {
+        return $this->hasMany(IncidentStatusHistory::class);
+    }
+
+    public function rpaLogs()
+    {
+        return $this->hasMany(RpaLog::class);
+    }
+
     public function attachments()
     {
         return $this->hasMany(IncidentAttachment::class);
     }
 
-    public function statusHistories()
+    public function aiProcessing()
     {
-        return $this->hasMany(IncidentStatusHistory::class);
+        return $this->hasOne(AiProcessing::class);
     }
 }

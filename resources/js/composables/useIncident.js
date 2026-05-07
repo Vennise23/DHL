@@ -1,5 +1,6 @@
-import { ref, computed } from "vue";
+import { ref, computed, onBeforeUnmount, nextTick } from "vue";
 import axios from "axios";
+import { parse } from "filepond";
 
 let timeout;
 
@@ -11,12 +12,12 @@ const incidents = ref([]);
 const histories = ref([]);
 const rpaLogs = ref([]);
 const attachments = ref([]);
+const users = ref([]);
 
 const showAttachmentModal = ref(false);
+const selectedAttachment = ref(null);
 
-const form = ref({
-
-});
+const form = ref({});
 const search = ref({
     title: "",
     category: "",
@@ -32,21 +33,33 @@ const loadIncidents = async () => {
 const filteredIncidents = computed(() => {
     return incidents.value.filter((i) => {
         return (
-            (!search.value.title || i.title.includes(search.value.title)) &&
-            (!search.value.status || i.status === search.value.status)
+            (!search.value.title ||
+                i.title
+                    ?.toLowerCase()
+                    .includes(search.value.title.toLowerCase())) &&
+            (!search.value.status ||
+                i.status?.toLowerCase() ===
+                    search.value.status.toLowerCase()) &&
+            (!search.value.priority ||
+                i.priority?.toLowerCase() ===
+                    search.value.priority.toLowerCase()) &&
+            (!search.value.category ||
+                i.category
+                    ?.toLowerCase()
+                    .includes(search.value.category.toLowerCase()))
         );
     });
 });
 
 const setCreate = () => {
     mode.value = "create";
-      form.value = {
+    form.value = {
         source: "manual",
         status: "draft",
         priority: "low",
         title: "",
         description: "",
-        category: ""
+        category: "",
     };
 };
 
@@ -55,34 +68,132 @@ const searchIncidents = () => {
 };
 
 const saveIncident = async () => {
-    if (mode.value === "create") {
-        await axios.post("/api/incidents", form.value);
-    } else {
-        await axios.put(`/api/incidents/${form.value.id}`, form.value);
-    }
+    try {
+        const formData = new FormData();
 
-    reset();
-    loadIncidents();
+        // normal fields
+        formData.append("title", form.value.title);
+        formData.append("description", form.value.description);
+        formData.append("priority", form.value.priority);
+        formData.append("category", form.value.category);
+        formData.append("source", form.value.source);
+        formData.append("status", form.value.status);
+        formData.append("assigned_to", form.value.assigned_to || "");
+
+        // multiple files
+        attachments.value.forEach((a) => {
+            // old attachment
+            if (a.id) {
+                formData.append("existing_attachments[]", a.id);
+            }
+
+            // new attachment
+            if (a.file) {
+                formData.append("attachments[]", a.file);
+            }
+        });
+
+        if (form.value.id) {
+            formData.append("_method", "PUT");
+            await axios.post(`/api/incidents/${form.value.id}`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+        } else {
+            const res = await axios.post("/api/incidents", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+        }
+    } catch (err) {
+        console.error("Save failed:", err);
+    } finally {
+        reset();
+        loadIncidents();
+    }
 };
 
 const reset = () => {
     mode.value = "search";
+    aiLoading.value = false;
+
+    incidents.value = [];
+    histories.value = [];
+    rpaLogs.value = [];
+    attachments.value = [];
+    showAttachmentModal.value = false;
+    selectedAttachment.value = null;
+
+    search.value = {
+        title: "",
+        category: "",
+        status: "",
+        priority: "",
+    };
+
     form.value = {};
+    loadIncidents();
 };
 
 const viewIncident = async (i) => {
+    reset();
     mode.value = "view";
-
-    const res = await axios.get(`/api/incidents/${i.id}`);
-    form.value = res.data;
-
-    histories.value = res.data.histories || [];
-    rpaLogs.value = res.data.rpa_logs || [];
+    getIncidentById(i);
 };
 
 const editIncident = (i) => {
+    reset();
     mode.value = "update";
-    form.value = i;
+    getIncidentById(i);
+};
+
+const setUpdate = () => {
+    mode.value = "update";
+};
+
+const getIncidentById = async (i) => {
+    try {
+        const res = await axios.get(`/api/incidents/${i.id}`);
+
+        const data = res.data;
+
+        // main form
+        form.value = {
+            ...data,
+            ai_summary: data.ai_processing?.ai_summary,
+            ai_tags: data.ai_processing?.ai_tags
+                ? JSON.parse(data.ai_processing.ai_tags)
+                : [],
+            ai_suggestions: data.ai_processing?.ai_suggestions,
+        };
+
+        // relations
+        histories.value = data.histories || [];
+        rpaLogs.value = data.rpa_logs || [];
+        attachments.value = (res.data.attachments || []).map((a) => ({
+            id: a.id,
+            name: a.file_name,
+            path: a.file_path,
+            preview: /\.(jpg|jpeg|png|gif|webp)$/i.test(a.file_path)
+                ? `/storage/${a.file_path}`
+                : null,
+        }));
+    } catch (err) {
+        console.error("View failed:", err);
+    } finally {
+        await nextTick();
+
+        requestAnimationFrame(() => {
+            const el = document.getElementById("app-scroll");
+
+            if (el) {
+                el.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                });
+            }
+        });
+    }
 };
 
 const deleteIncident = async () => {
@@ -120,39 +231,159 @@ const priorityColor = (value) => {
     }
 };
 
-const autoCategorize = () => {
+const runAI = () => {
     clearTimeout(timeout);
 
     if (!form.value.title || !form.value.description) return;
 
+    aiLoading.value = true;
+
     timeout = setTimeout(async () => {
         try {
-          aiLoading.value = true;
+            const formData = new FormData();
+            formData.append("title", form.value.title || "");
+            formData.append("description", form.value.description || "");
 
-            const res = await axios.post("/api/ai/categorize", {
-                title: form.value.title,
-                description: form.value.description,
+            // 📎 append images/files
+            attachments.value.forEach((file, i) => {
+                formData.append(`files[${i}]`, file);
+            });
+            const res = await axios.post("/api/ai/process", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
             });
 
             form.value.category = res.data.category;
             form.value.priority = res.data.priority;
-
+            form.value.ai_summary = res.data.summary;
+            form.value.ai_tags = res.data.tags || [];
+            form.value.ai_suggestions = res.data.suggestions;
         } catch (err) {
             console.error("AI error:", err);
         } finally {
-          aiLoading.value = false;
+            aiLoading.value = false;
         }
-    }, 1200); // ⬅️ increase delay (important)
+    }, 1200);
+};
+
+const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
+
+    files.forEach((file) => {
+        attachments.value.push({
+            file,
+            name: file.name,
+            type: file.type,
+            path: file.webkitRelativePath || null,
+            preview: file.type.startsWith("image/")
+                ? URL.createObjectURL(file)
+                : null,
+        });
+    });
+};
+
+const handleDrop = (event) => {
+    const files = Array.from(event.dataTransfer.files);
+
+    files.forEach((file) => {
+        attachments.value.push({
+            file,
+            name: file.name,
+            type: file.type,
+            path: file.webkitRelativePath || null,
+            preview: file.type.startsWith("image/")
+                ? URL.createObjectURL(file)
+                : null,
+        });
+    });
+};
+
+const processFiles = (files) => {
+    files.forEach((file) => {
+        attachments.value.push({
+            file, // real File object (IMPORTANT)
+            name: file.webkitRelativePath || file.name,
+            type: file.type,
+            size: file.size,
+        });
+    });
+};
+
+const priorityLabel = (value) => {
+    const map = {
+        low: "🟢 Low",
+        medium: "🟡 Medium",
+        high: "🟠 High",
+    };
+    return map[value] || "Not set";
+};
+
+const sourceLabel = (value) => {
+    const map = {
+        manual: "Manual",
+        email: "Email",
+        telegram: "Telegram",
+        teams: "Teams",
+        rpa: "RPA",
+    };
+    return map[value] || "Not set";
+};
+
+const statusLabel = (value) => {
+    const map = {
+        draft: "Draft",
+        reviewed: "Reviewed",
+        published: "Published",
+    };
+    return map[value] || "Not set";
+};
+
+const openAttachment = (file) => {
+    selectedAttachment.value = file;
+    showAttachmentModal.value = true;
+};
+
+const loadUsers = async () => {
+    const res = await axios.get("/api/users");
+
+    users.value = res.data;
+};
+
+const userLabel = (id) => {
+    const user = users.value.find((u) => u.id === id);
+
+    return user ? user.name : "Not assigned";
+};
+
+const removeAttachment = (index) => {
+
+    const file = attachments.value[index];
+
+    // revoke preview URL
+    if (file.preview?.startsWith("blob:")) {
+        URL.revokeObjectURL(file.preview);
+    }
+
+    attachments.value.splice(index, 1);
 };
 
 export function useIncident() {
+    onBeforeUnmount(() => {
+        attachments.value.forEach((f) => {
+            if (f.preview) URL.revokeObjectURL(f.preview);
+        });
+    });
+
     return {
         // state
         incidents,
         histories,
         rpaLogs,
         attachments,
+        users,
         showAttachmentModal,
+        selectedAttachment,
         form,
         search,
         mode,
@@ -171,12 +402,24 @@ export function useIncident() {
         editIncident,
         deleteIncident,
         confirmDelete,
+        handleFileChange,
+        handleDrop,
+        openAttachment,
+        removeAttachment,
+        setUpdate,
 
         // helpers
         statusColor,
         priorityColor,
+        priorityLabel,
+        sourceLabel,
+        statusLabel,
+        userLabel,
+
+        // relations
+        loadUsers,
 
         // AI
-        autoCategorize,
+        runAI,
     };
 }

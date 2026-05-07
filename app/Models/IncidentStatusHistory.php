@@ -13,7 +13,7 @@ class IncidentStatusHistory extends Model
         'incident_id',
         'status',
         'changed_by',
-        'remarks'
+        'note'
     ];
 
     public function incident()

@@ -37,4 +37,9 @@ class UserController extends Controller
             'user' => $user
         ]);
     }
+
+    public function index()
+    {
+        return response()->json(\App\Models\User::all());
+    }
 }

@@ -8,13 +8,24 @@ class AiProcessing extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+     protected $fillable = [
         'incident_id',
-        'input_data',
-        'ai_result',
-        'confidence_score'
+        'ai_summary',
+        'ai_tags',
+        'ai_suggestions',
+        'category',
+        'priority',
+        'conflict_flag',
+        'ai_confidence',
+        'ai_input_type',
+        'raw_prompt',
+        'raw_response',
     ];
 
+    protected $casts = [
+        'conflict_flag' => 'boolean',
+        'ai_tags' => 'array',
+    ];
     public function incident()
     {
         return $this->belongsTo(Incident::class);
