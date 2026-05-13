@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\IncidentService;
 
 
-class IncidentController extends Controller
+class IncidentController
 {
     // ✅ GET /api/incidents
     public function index()
@@ -69,8 +69,8 @@ class IncidentController extends Controller
             'description' => 'nullable|string',
             'attachments.*' => 'file|mimes:jpg,png,pdf,webp,docx|max:5120',
 
-            'status' => 'in:draft,reviewed,published',
-            'priority' => 'in:low,medium,high,critical',
+            'status' => 'in:draft,reviewed,published,rejected',
+            'priority' => 'in:low,medium,high',
             'source' => 'in:email,telegram,teams,manual,rpa',
             'category' => 'nullable|string',
             'assigned_to' => 'nullable|exists:users,id',
@@ -96,6 +96,22 @@ class IncidentController extends Controller
         ]);
     }
 
+    // Reviewer update (status, assign, add notes)
+    public function reviewerUpdate(Request $request, $id, IncidentService $service)
+    {
+        $request->validate([
+            'status' => 'in:draft,reviewed,published,rejected',
+            'assigned_to' => 'nullable|exists:users,id',
+            'note' => 'nullable|string',
+        ]);
+        $incident = $service->reviewerUpdate(
+            $request,
+            $id,
+            $request->user()->id
+        );
+        return response()->json($incident);
+    }
+
     // Get Assigned Incidents for Staff
     public function assignedIncidents(Request $request)
     {
@@ -113,7 +129,7 @@ class IncidentController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:draft,reviewed,published'
+            'status' => 'required|in:draft,reviewed,published,rejected'
         ]);
 
         $incident = Incident::findOrFail($id);
@@ -136,44 +152,37 @@ class IncidentController extends Controller
         ]);
     }
 
-    //Reviewer assign incident to staff
-    public function assign(Request $request, $id)
+    public function storeRPA(Request $request, IncidentService $incidentService)
     {
-        $request->validate([
-            'assigned_to' => 'required|exists:users,id'
-        ]);
+        try {
 
-        $incident = Incident::findOrFail($id);
+            // optional validation
+            $request->validate([
+                'title' => 'required|string',
+                'description' => 'nullable|string',
+                'type' => 'nullable|in:email,drive,telegram',
+                'attachment' => 'nullable|string', // base64 or file path depending on your RPA implementation
+            ]);
 
-        $incident->update([
-            'assigned_to' => $request->assigned_to,
-            'updated_by' => $request->user()->id
-        ]);
+            // RPA bot user id, run 'php artisan migrate:fresh --seed' to reset database 
+            $botUserId = 4;
 
-        return response()->json([
-            'message' => 'Incident assigned successfully',
-            'data' => $incident
-        ]);
-    }
+            $incident = $incidentService->createFromRPA(
+                $request,
+                $botUserId,
+                $request['type'] ?? 'email',
+            );
 
-    //Reviewer add note/ comment
-    public function addNote(Request $request, $id)
-    {
-        $request->validate([
-            'note' => 'required|string'
-        ]);
+            return response()->json([
+                'success' => true,
+                'incident' => $incident
+            ], 201);
+        } catch (\Exception $e) {
 
-        $incident = Incident::findOrFail($id);
-
-        // store in status history (or notes table if you have one)
-        $incident->statusHistories()->create([
-            'status' => $incident->status,
-            'changed_by' => $request->user()->id,
-            'note' => $request->note
-        ]);
-
-        return response()->json([
-            'message' => 'Note added successfully'
-        ]);
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

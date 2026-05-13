@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\AIService;
-use App\Services\AiProcessingService;
 
-class AIController extends Controller
+class AIController
 {
     public function process(Request $request)
     {

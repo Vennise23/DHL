@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\AIController;
+use App\Http\Controllers\DashboardController;
 
 // User Authentication
 Route::post('/login', [AuthController::class, 'login']);
@@ -12,9 +13,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [UserController::class, 'me']);
     Route::put('/me', [UserController::class, 'update']);
 });
+Route::middleware('auth:sanctum')->get('/users', [UserController::class, 'index']);
+
+/*
+|--------------------------------------------------------------------------
+| DASHBOARD (ADMIN & REVIEWER & STAFF)
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index']);
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -36,14 +45,17 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 });
 // Reviewer can update status, assign, add notes
 Route::middleware(['auth:sanctum', 'role:reviewer'])->group(function () {
-    Route::put('/incidents/{id}/status', [IncidentController::class, 'updateStatus']);
-    Route::put('/incidents/{id}/assign', [IncidentController::class, 'assign']);
-    Route::post('/incidents/{id}/note', [IncidentController::class, 'addNote']);
+    Route::put('/incidents/{id}', [IncidentController::class, 'reviewerUpdate']);
 });
-// Staff can only update status of their assigned incidents
+// Staff can create incidents, and update status of their assigned incidents
 Route::middleware(['auth:sanctum', 'role:staff'])->group(function () {
     Route::put('/incidents/{id}/status', [IncidentController::class, 'updateStatus']);
+    Route::post('/incidents', [IncidentController::class, 'store']);
 });
+// Rpa can create incidents and view rpa logs
+Route::post('/rpa/incidents', [IncidentController::class, 'storeRPA']);
+Route::get('/incidents/{id}/rpa-logs', [IncidentController::class, 'viewRpaLogs']);
+
 
 /*
 |--------------------------------------------------------------------------

@@ -12,7 +12,7 @@ class IncidentFactory extends Factory
         return [
             'title' => fake()->sentence(6),
             'description' => fake()->paragraph(),
-            'status' => fake()->randomElement(['draft', 'reviewed', 'published']),
+            'status' => fake()->randomElement(['draft', 'reviewed', 'published','rejected']),
             'priority' => fake()->randomElement(['low', 'medium', 'high']),
             'source' => fake()->randomElement(['email', 'telegram', 'teams', 'manual', 'rpa']),
             'category' => fake()->randomElement([

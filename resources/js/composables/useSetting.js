@@ -1,6 +1,11 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { useAuth } from "@/composables/useAuth";
+import { useIncident } from "@/composables/useIncident";
+
+const { resetAuth } = useAuth();
+const { reset } = useIncident();
 
 export function useSetting() {
     const router = useRouter();
@@ -32,6 +37,9 @@ export function useSetting() {
 
         localStorage.removeItem("token");
         localStorage.removeItem("user");
+
+        resetAuth();
+        reset(); // Incident state reset
 
         router.push("/");
     };

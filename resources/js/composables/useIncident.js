@@ -1,6 +1,11 @@
 import { ref, computed, onBeforeUnmount, nextTick } from "vue";
 import axios from "axios";
 import { parse } from "filepond";
+import { useAuth } from "@/composables/useAuth";
+
+const auth = useAuth();
+
+const { isAdmin, isReviewer, isStaff, can, initAuth } = auth;
 
 let timeout;
 
@@ -26,7 +31,15 @@ const search = ref({
 });
 
 const loadIncidents = async () => {
-    const res = await axios.get("/api/incidents");
+    // 🔥 ensure auth loaded first
+    await initAuth();
+
+    let url = "/api/incidents";
+
+    if (isStaff()) {
+        url = "/api/assigned-incidents";
+    }
+    const res = await axios.get(url);
     incidents.value = res.data;
 };
 
@@ -79,6 +92,7 @@ const saveIncident = async () => {
         formData.append("source", form.value.source);
         formData.append("status", form.value.status);
         formData.append("assigned_to", form.value.assigned_to || "");
+        formData.append("note", form.value.note || "");
 
         // multiple files
         attachments.value.forEach((a) => {
@@ -110,6 +124,7 @@ const saveIncident = async () => {
     } finally {
         reset();
         loadIncidents();
+        loadUsers();
     }
 };
 
@@ -121,6 +136,8 @@ const reset = () => {
     histories.value = [];
     rpaLogs.value = [];
     attachments.value = [];
+    //users.value = [];
+
     showAttachmentModal.value = false;
     selectedAttachment.value = null;
 
@@ -151,6 +168,11 @@ const setUpdate = () => {
     mode.value = "update";
 };
 
+const setAssign = (i) => {
+    mode.value = "assign";
+    getIncidentById(i);
+};
+
 const getIncidentById = async (i) => {
     try {
         const res = await axios.get(`/api/incidents/${i.id}`);
@@ -161,9 +183,7 @@ const getIncidentById = async (i) => {
         form.value = {
             ...data,
             ai_summary: data.ai_processing?.ai_summary,
-            ai_tags: data.ai_processing?.ai_tags
-                ? JSON.parse(data.ai_processing.ai_tags)
-                : [],
+            ai_tags: safeJsonParse(data.ai_processing?.ai_tags),
             ai_suggestions: data.ai_processing?.ai_suggestions,
         };
 
@@ -216,6 +236,8 @@ const statusColor = (s) => {
     if (s === "reviewed") return "bg-blue-200 border-blue-500 text-blue-800";
     if (s === "published")
         return "bg-green-200 border-green-500 text-green-800";
+    if (s === "rejected")
+        return "bg-red-200 border-red-500 text-red-800";
 };
 
 const priorityColor = (value) => {
@@ -265,6 +287,16 @@ const runAI = () => {
             aiLoading.value = false;
         }
     }, 1200);
+};
+
+const safeJsonParse = (value) => {
+    try {
+        return JSON.parse(value);
+    } catch (e) {
+        return typeof value === "string"
+            ? value.split(",").map((v) => v.trim()) // fallback for "a, b, c"
+            : [];
+    }
 };
 
 const handleFileChange = (event) => {
@@ -335,6 +367,7 @@ const statusLabel = (value) => {
         draft: "Draft",
         reviewed: "Reviewed",
         published: "Published",
+        rejected: "Rejected",
     };
     return map[value] || "Not set";
 };
@@ -345,9 +378,25 @@ const openAttachment = (file) => {
 };
 
 const loadUsers = async () => {
-    const res = await axios.get("/api/users");
+    await initAuth();
 
-    users.value = res.data;
+    let url;
+
+    if (isAdmin() || isReviewer()) {
+        url = "/api/users";
+    } else {
+        url = "/api/me";
+    }
+
+    try{
+    const res = await axios.get(url);
+
+    users.value = Array.isArray(res.data)
+        ? res.data
+        : [res.data];
+    }catch(err){
+        console.error("Failed to load users", err);
+    }
 };
 
 const userLabel = (id) => {
@@ -357,7 +406,6 @@ const userLabel = (id) => {
 };
 
 const removeAttachment = (index) => {
-
     const file = attachments.value[index];
 
     // revoke preview URL
@@ -366,6 +414,20 @@ const removeAttachment = (index) => {
     }
 
     attachments.value.splice(index, 1);
+};
+
+const formatDate = (dateStr) => {
+    if (!dateStr) return "-";
+
+    const date = new Date(dateStr);
+
+    return date.toLocaleString("en-MY", {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+    });
 };
 
 export function useIncident() {
@@ -377,6 +439,9 @@ export function useIncident() {
 
     return {
         // state
+        isAdmin,
+        isReviewer,
+        isStaff,
         incidents,
         histories,
         rpaLogs,
@@ -407,6 +472,7 @@ export function useIncident() {
         openAttachment,
         removeAttachment,
         setUpdate,
+        setAssign,
 
         // helpers
         statusColor,
@@ -415,9 +481,11 @@ export function useIncident() {
         sourceLabel,
         statusLabel,
         userLabel,
+        formatDate,
 
         // relations
         loadUsers,
+        can,
 
         // AI
         runAI,

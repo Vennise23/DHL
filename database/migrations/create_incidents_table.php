@@ -16,11 +16,11 @@ return new class extends Migration
             $table->text('description')->nullable();
 
             // Workflow status
-            $table->enum('status', ['draft', 'reviewed', 'published'])
+            $table->enum('status', ['draft', 'reviewed', 'published','rejected'])
                 ->default('draft');
 
             // Priority (important for DHL scenario)
-            $table->enum('priority', ['low', 'medium', 'high', 'critical'])
+            $table->enum('priority', ['low', 'medium', 'high'])
                 ->default('medium');
 
             // Source channel (RPA requirement)
@@ -29,6 +29,9 @@ return new class extends Migration
 
             // Category for better organization by AI
             $table->string('category')->nullable();
+
+            // UiPath gneerate hash for duplicate detection
+            $table->string('content_hash')->nullable()->unique();
 
             // Assigned to
             $table->foreignId('assigned_to')->nullable()->constrained('users');
@@ -57,7 +60,7 @@ return new class extends Migration
 
             $table->foreignId('incident_id')->constrained()->onDelete('cascade');
 
-            $table->enum('status', ['draft', 'reviewed', 'published']);
+            $table->enum('status', ['draft', 'reviewed', 'published','rejected']);
 
             $table->foreignId('changed_by')->constrained('users');
 
@@ -76,6 +79,8 @@ return new class extends Migration
             $table->integer('failed_count')->default(0);
 
             $table->text('log_file_path')->nullable();
+            $table->string('screenshot_path')->nullable();
+            $table->string('external_source_id')->nullable();
 
             $table->timestamps();
         });

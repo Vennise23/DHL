@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
 
             // Role system for your scenario
-            $table->enum('role', ['staff', 'reviewer', 'admin'])->default('staff');
+            $table->enum('role', ['staff', 'reviewer', 'admin', 'rpa'])->default('staff');
 
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

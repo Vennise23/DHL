@@ -31,6 +31,7 @@ class IncidentService
                 'priority' => $request['priority'] ?? 'medium',
                 'source' => $request['source'] ?? 'manual',
                 'category' => $request['category'] ?? null,
+                'assigned_to' => $request['assigned_to'] ?? null,
                 'created_by' => $userId,
             ]);
 
@@ -329,4 +330,144 @@ class IncidentService
             throw $e;
         }
     }
+
+    public function reviewerUpdate($request, $id, $userId)
+    {
+        DB::beginTransaction();
+
+        try {
+            $incident = Incident::findOrFail($id);
+
+            $incident->update([
+                'status' => $request['status'] ?? $incident->status,
+                'assigned_to' => $request['assigned_to'] ?? $incident->assigned_to,
+            ]);
+
+            // Add history
+            IncidentStatusHistory::create([
+                'incident_id' => $incident->id,
+                'status' => $incident->status,
+                'changed_by' => $userId,
+                'note' => $request['note'] ?? 'Reviewer updated status and assignment',
+            ]);
+
+            DB::commit();
+
+            return $incident;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    public function createFromRPA($request, $userId, $type = 'email')
+{
+    DB::beginTransaction();
+
+    try {
+
+        // 1. Create incident
+        $incident = Incident::create([
+            'title' => $request['title'],
+            'description' => $request['description'],
+            'status' => 'draft',
+            'priority' => $request['priority'] ?? 'medium',
+            'source' => 'email',
+            'category' => $request['category'] ?? 'Email Incident',
+            'assigned_to' => null,
+            'created_by' => $userId,
+        ]);
+
+        // 2. Save attachments
+        if ($request->hasFile('attachments')) {
+
+            foreach ($request->file('attachments') as $file) {
+
+                $path = $file->store('incidents', 'public');
+
+                IncidentAttachment::create([
+                    'incident_id' => $incident->id,
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_path' => $path,
+                    'file_type' => $file->getClientMimeType(),
+                ]);
+            }
+        }
+
+        // 3. Detect AI input type
+        $hasImage = $request->hasFile('attachments');
+
+        $inputType = $hasImage ? 'image' : 'text';
+
+        $request['ai_input_type'] = $inputType;
+
+        // 4. Run AI
+        $aiResult = $this->aiService->analyze($request);
+
+        // 5. Update AI fields
+        $updatedFields = [];
+
+        if (
+            !empty($aiResult['category']) &&
+            $aiResult['category'] !== $incident->category
+        ) {
+            $updatedFields['category'] = $aiResult['category'];
+        }
+
+        if (
+            !empty($aiResult['priority']) &&
+            $aiResult['priority'] !== $incident->priority
+        ) {
+            $updatedFields['priority'] = $aiResult['priority'];
+        }
+
+        if (!empty($updatedFields)) {
+
+            $incident->update($updatedFields);
+
+            IncidentStatusHistory::create([
+                'incident_id' => $incident->id,
+                'status' => $incident->status,
+                'changed_by' => $userId,
+                'note' => 'AI updated: ' . json_encode($updatedFields),
+            ]);
+        }
+
+        // 6. Save AI processing
+        app(AIProcessingService::class)->store(
+            $incident->id,
+            $aiResult,
+            $request['title'] . ' ' . ($request['description'] ?? ''),
+            json_encode($aiResult),
+            $inputType
+        );
+
+        // 7. History
+        IncidentStatusHistory::create([
+            'incident_id' => $incident->id,
+            'status' => 'draft',
+            'changed_by' => $userId,
+            'note' => 'Incident created from RPA ' . $type . ' ingestion',
+        ]);
+
+        // 8. RPA log
+        RpaLog::create([
+            'incident_id' => $incident->id,
+            'source_type' => $type,
+            'created_count' => 1,
+            'duplicate_count' => 0,
+            'failed_count' => 0,
+        ]);
+
+        DB::commit();
+
+        return $incident;
+
+    } catch (\Exception $e) {
+
+        DB::rollBack();
+
+        throw $e;
+    }
+}
 }

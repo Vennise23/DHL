@@ -15,6 +15,8 @@ class RpaLog extends Model
         'duplicate_count',
         'failed_count',
         'log_file_path',
+        'screenshot_path',
+        'external_source_id',
         'created_at',
         'updated_at',
     ];

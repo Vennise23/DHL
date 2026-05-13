@@ -20,4 +20,5 @@ const route = useRoute();
 
 // detect login page
 const isLoginPage = computed(() => route.path === "/");
+
 </script>

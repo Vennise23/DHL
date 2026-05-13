@@ -16,6 +16,8 @@ class RpaLogFactory extends Factory
             'duplicate_count' => fake()->numberBetween(0, 3),
             'failed_count' => fake()->numberBetween(0, 2),
             'log_file_path' => 'logs/' . fake()->uuid() . '.log',
+            'screenshot_path' => 'screenshots/' . fake()->uuid() . '.png',
+            'external_source_id' => fake()->uuid(),
             'created_at' => now(),
             'updated_at' => now(),
         ];

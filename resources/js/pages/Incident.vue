@@ -6,7 +6,7 @@
 
             <div class="flex gap-2">
                 <button
-                    v-if="mode === 'search'"
+                    v-if="mode === 'search' && can('incident.create')"
                     @click="setCreate"
                     class="bg-blue-600 text-white px-3 py-1 rounded"
                 >
@@ -14,7 +14,15 @@
                 </button>
 
                 <button
-                    v-if="mode === 'create' || mode === 'update'"
+                    v-if="
+                        (mode === 'create' ||
+                            mode === 'update' ||
+                            mode === 'assign') &&
+                        (can('incident.update') ||
+                            can('incident.create') ||
+                            can('incident.update.all') ||
+                            can('incident.assign'))
+                    "
                     @click="saveIncident"
                     class="bg-blue-600 text-white px-3 py-1 rounded"
                 >
@@ -25,7 +33,8 @@
                     v-if="
                         mode === 'create' ||
                         mode === 'update' ||
-                        mode === 'view'
+                        mode === 'view' ||
+                        mode === 'assign'
                     "
                     @click="reset"
                     class="bg-gray-500 text-white px-3 py-1 rounded"
@@ -34,7 +43,7 @@
                 </button>
 
                 <button
-                    v-if="mode === 'view'"
+                    v-if="mode === 'view' && can('incident.update')"
                     @click="setUpdate"
                     class="bg-yellow-500 text-white px-3 py-1 rounded"
                 >
@@ -42,7 +51,18 @@
                 </button>
 
                 <button
-                    v-if="mode === 'view' || mode === 'update'"
+                    v-if="mode === 'view' && can('incident.assign')"
+                    @click="setAssign"
+                    class="bg-yellow-500 text-white px-3 py-1 rounded"
+                >
+                    Assign
+                </button>
+
+                <button
+                    v-if="
+                        (mode === 'view' || mode === 'update') &&
+                        can('incident.delete')
+                    "
                     @click="deleteIncident"
                     class="bg-red-600 text-white px-3 py-1 rounded"
                 >
@@ -91,6 +111,7 @@
                     <option value="draft">Draft</option>
                     <option value="reviewed">Reviewed</option>
                     <option value="published">Published</option>
+                    <option value="rejected">Rejected</option>
                 </select>
 
                 <!-- PRIORITY -->
@@ -124,7 +145,10 @@
                 <div>
                     <label class="text-sm text-gray-600">Title</label>
                     <input
-                        v-if="mode == 'create' || mode == 'update'"
+                        v-if="
+                            (mode == 'create' && can('incident.create')) ||
+                            (mode == 'update' && can('incident.update.all'))
+                        "
                         v-model="form.title"
                         :disabled="aiLoading"
                         placeholder="Enter incident title"
@@ -153,7 +177,7 @@
                     </label>
 
                     <input
-                        v-if="mode == 'update'"
+                        v-if="mode == 'update' && can('incident.update.all')"
                         v-model="form.category"
                         placeholder="AI will classify this incident"
                         class="mt-1 w-full p-2 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-400 outline-none"
@@ -176,7 +200,10 @@
                 <div class="md:col-span-2">
                     <label class="text-sm text-gray-600">Description</label>
                     <textarea
-                        v-if="mode == 'create' || mode == 'update'"
+                        v-if="
+                            (mode == 'create' && can('incident.create')) ||
+                            (mode == 'update' && can('incident.update.all'))
+                        "
                         v-model="form.description"
                         rows="4"
                         :disabled="aiLoading"
@@ -195,7 +222,12 @@
                 <div class="relative">
                     <label class="text-sm text-gray-600">Priority</label>
                     <select
-                        v-if="mode == 'create' || mode == 'update'"
+                        v-if="
+                            (mode == 'create' && can('incident.create')) ||
+                            (mode == 'update' &&
+                                (can('incident.update.all') ||
+                                    can('incident.update.priority')))
+                        "
                         v-model="form.priority"
                         :class="[
                             'mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none transition',
@@ -227,13 +259,22 @@
                 <div class="relative">
                     <label class="text-sm text-gray-600">Assigned To</label>
                     <select
-                        v-if="mode == 'update'"
+                        v-if="
+                            (mode == 'update' && can('incident.update.all')) ||
+                            (mode == 'assign' &&
+                                can('incident.update.assigned_to')) ||
+                            (mode == 'create' && can('incident.create'))
+                        "
                         v-model="form.assigned_to"
                         class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
                         :disabled="aiLoading"
                     >
                         <option disabled value="">Select User</option>
-                        <option v-for="u in users" :key="u.id" :value="u.id">
+                        <option
+                            v-for="u in users"
+                            :key="u.id"
+                            :value="String(u.id)"
+                        >
                             {{ u.name }} ({{ u.email }})
                         </option>
                     </select>
@@ -249,7 +290,12 @@
                 <div>
                     <label class="text-sm text-gray-600">Source</label>
                     <select
-                        v-if="mode == 'create' || mode == 'update'"
+                        v-if="
+                            (mode == 'create' && can('incident.create')) ||
+                            (mode == 'update' &&
+                                (can('incident.update.all') ||
+                                    can('incident.update.source')))
+                        "
                         v-model="form.source"
                         class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
                     >
@@ -271,7 +317,12 @@
                 <div v-if="mode != 'create'">
                     <label class="text-sm text-gray-600">Status</label>
                     <select
-                        v-if="mode == 'update'"
+                        v-if="
+                            (mode == 'update' &&
+                                (can('incident.update.all') ||
+                                    can('incident.update.status'))) ||
+                            (mode == 'assign' && can('incident.change_status'))
+                        "
                         v-model="form.status"
                         :class="[
                             'mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none transition',
@@ -281,6 +332,7 @@
                         <option value="draft">Draft</option>
                         <option value="reviewed">Reviewed</option>
                         <option value="published">Published</option>
+                        <option value="rejected">Rejected</option>
                     </select>
                     <p
                         v-else
@@ -301,7 +353,11 @@
             @click="$refs.fileInput.click()"
             @dragover.prevent
             @drop.prevent="handleDrop"
-            v-if="mode !== 'search' && mode !== 'view'"
+            v-if="
+                mode !== 'search' &&
+                mode !== 'view' &&
+                (can('incident.create') || can('incident.update.all'))
+            "
         >
             <input
                 type="file"
@@ -330,7 +386,10 @@
             >
                 <!-- REMOVE BUTTON -->
                 <button
-                    v-if="mode === 'update' || mode === 'create'"
+                    v-if="
+                        (mode === 'update' && can('incident.update.all')) ||
+                        (mode === 'create' && can('incident.create'))
+                    "
                     @click.stop="removeAttachment(index)"
                     class="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full text-[10px] flex items-center justify-center hover:bg-red-600"
                 >
@@ -459,9 +518,26 @@
             </div>
         </div>
 
+        <!-- ================= NOTES ================= -->
+        <div
+            v-if="mode === 'assign' && can('incident.assign')"
+            class="mt-4 rounded-xl shadow bg-white p-4"
+        >
+            <h2 class="font-bold mb-3">Add Note</h2>
+
+            <div class="flex flex-col gap-3">
+                <textarea
+                    v-model="form.note"
+                    rows="3"
+                    placeholder="Write a note about this assignment..."
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                ></textarea>
+            </div>
+        </div>
+
         <!-- ================= HISTORY ================= -->
         <div
-            v-if="mode !== 'search' && mode !== 'create'"
+            v-if="mode === 'view' && can('incident.view.history')"
             class="mt-4 rounded-xl shadow bg-white p-4"
         >
             <h2 class="font-bold mb-3">Status History</h2>
@@ -480,13 +556,17 @@
             >
                 <Column field="status" header="Status" />
                 <Column field="note" header="Note" />
-                <Column field="created_at" header="Created At" />
+                <Column header="Created At">
+                    <template #body="slotProps">
+                        {{ formatDate(slotProps.data.created_at) }}
+                    </template>
+                </Column>
             </DataTable>
         </div>
 
         <!-- ================= RPA LOGS ================= -->
         <div
-            v-if="mode !== 'search' && mode !== 'create'"
+            v-if="mode === 'view' && can('incident.view.rpa_logs')"
             class="mt-4 rounded-xl shadow bg-white p-4"
         >
             <h2 class="font-bold mb-3">RPA Logs</h2>
@@ -566,6 +646,7 @@
                             />
 
                             <Button
+                                v-if="can('incident.update')"
                                 icon="pi pi-pencil"
                                 class="p-button-sm p-button-warning"
                                 v-tooltip.top="'Edit'"
@@ -574,6 +655,16 @@
                             />
 
                             <Button
+                                v-if="can('incident.assign')"
+                                icon="pi pi-user-edit"
+                                class="p-button-sm p-button-success"
+                                v-tooltip.top="'Assign'"
+                                tooltip-options="{ showDelay: 500 }"
+                                @click="setAssign(slotProps.data)"
+                            />
+
+                            <Button
+                                v-if="can('incident.delete')"
                                 icon="pi pi-trash"
                                 v-tooltip.top="'Delete'"
                                 tooltip-options="{ showDelay: 500 }"
@@ -628,11 +719,11 @@
 import { onMounted } from "vue";
 import { useIncident } from "@/composables/useIncident";
 
-onMounted(() => {
-    loadIncidents();
-});
-
 const {
+    // state
+    isAdmin,
+    isReviewer,
+    isStaff,
     incidents,
     histories,
     rpaLogs,
@@ -644,7 +735,11 @@ const {
     search,
     mode,
     aiLoading,
+
+    // computed
     filteredIncidents,
+
+    // actions
     loadIncidents,
     setCreate,
     searchIncidents,
@@ -654,22 +749,32 @@ const {
     editIncident,
     deleteIncident,
     confirmDelete,
-    setUpdate,
-    statusColor,
-    priorityColor,
     handleFileChange,
     handleDrop,
     openAttachment,
     removeAttachment,
+    setUpdate,
+    setAssign,
+
+    // helpers
+    statusColor,
+    priorityColor,
     priorityLabel,
     sourceLabel,
     statusLabel,
     userLabel,
+    formatDate,
+
+    // relations
     loadUsers,
+    can,
+
+    // AI
+    runAI,
 } = useIncident();
 
-onMounted(() => {
-    loadIncidents();
-    loadUsers();
+onMounted(async () => {
+    await loadIncidents();
+    await loadUsers();
 });
 </script>

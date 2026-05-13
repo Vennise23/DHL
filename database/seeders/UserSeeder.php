@@ -28,6 +28,13 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'staff',
             ],
+            // RPA Bot user for testing RPA integration
+            [
+                'name' => 'RPA Bot',
+                'email' => 'rpa@dhl.com',
+                'password' => bcrypt('password'),
+                'role' => 'rpa',
+            ]
         ]);
 
         User::factory(10)->create();

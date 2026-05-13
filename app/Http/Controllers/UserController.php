@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
-class UserController extends Controller
+class UserController
 {
     // GET current user
     public function me(Request $request)
@@ -38,8 +40,18 @@ class UserController extends Controller
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(\App\Models\User::all());
+        $user = $request->user();
+
+        if ($user->role === 'admin') {
+            return User::all();
+        }
+
+        if ($user->role === 'reviewer') {
+            return User::where('role', '!=', 'admin')->get();
+        }
+
+        return [$user];
     }
 }
