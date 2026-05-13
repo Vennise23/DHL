@@ -1,0 +1,108 @@
+{
+  "Workflows": [
+    {
+      "Path": null,
+      "SortBy": 0,
+      "VariablesSectionElementsOrder": null,
+      "ArgumentsSectionElementsOrder": null,
+      "ConstantsSectionElementsOrder": null,
+      "AddedNamespaces": null
+    },
+    {
+      "Path": "Main.xaml",
+      "SortBy": 0,
+      "VariablesSectionElementsOrder": [
+        "title&30a03713-ccf0-44ac-a28e-74872622c415",
+        "description&30a03713-ccf0-44ac-a28e-74872622c415",
+        "apiResponse&30a03713-ccf0-44ac-a28e-74872622c415",
+        "type&30a03713-ccf0-44ac-a28e-74872622c415",
+        "sender&Sequence_1",
+        "attachmentPath&Sequence_1",
+        "newestEmail&Sequence_1",
+        "jobData&Sequence_1",
+        "jobData_1&Sequence_1",
+        "index&Sequence_29",
+        "index&Sequence_26"
+      ],
+      "ArgumentsSectionElementsOrder": [],
+      "ConstantsSectionElementsOrder": [],
+      "AddedNamespaces": null
+    },
+    {
+      "Path": "EmailWatcher.xaml",
+      "SortBy": 0,
+      "VariablesSectionElementsOrder": [
+        "index&Sequence_6",
+        "index&Sequence_3",
+        "title&30a03713-ccf0-44ac-a28e-74872622c415",
+        "description&30a03713-ccf0-44ac-a28e-74872622c415",
+        "apiResponse&30a03713-ccf0-44ac-a28e-74872622c415",
+        "type&30a03713-ccf0-44ac-a28e-74872622c415",
+        "newestEmail&Sequence_1",
+        "variable1&Sequence_1",
+        "jobData_1&Sequence_1"
+      ],
+      "ArgumentsSectionElementsOrder": [],
+      "ConstantsSectionElementsOrder": [],
+      "AddedNamespaces": null
+    },
+    {
+      "Path": "DriveWatcher.xaml",
+      "SortBy": 0,
+      "VariablesSectionElementsOrder": [
+        "index_2&Sequence_31",
+        "index_3&Sequence_31",
+        "index&Sequence_31",
+        "index_1&Sequence_31",
+        "title&30a03713-ccf0-44ac-a28e-74872622c415",
+        "description&30a03713-ccf0-44ac-a28e-74872622c415",
+        "apiResponse&30a03713-ccf0-44ac-a28e-74872622c415",
+        "type&30a03713-ccf0-44ac-a28e-74872622c415",
+        "processedFileIds&Sequence_1",
+        "driveFiles&Sequence_1",
+        "downloadedFile&Sequence_1",
+        "extractedContent&Sequence_1",
+        "textAnnotations&Sequence_1",
+        "waitForFileJobData&Sequence_1",
+        "newlyCreatedFile&Sequence_1",
+        "description&Sequence_23",
+        "type&Sequence_23",
+        "index&Sequence_23",
+        "description&Sequence_24",
+        "type&Sequence_24",
+        "index&Sequence_24",
+        "description&Sequence_25",
+        "type&Sequence_25",
+        "index&Sequence_25",
+        "description&Sequence_3",
+        "type&Sequence_3",
+        "index&Sequence_3",
+        "description&Sequence_9",
+        "type&Sequence_9",
+        "index&Sequence_9",
+        "description&Sequence_11",
+        "type&Sequence_11",
+        "index&Sequence_11"
+      ],
+      "ArgumentsSectionElementsOrder": [],
+      "ConstantsSectionElementsOrder": [],
+      "AddedNamespaces": null
+    },
+    {
+      "Path": "SendToLaravel.xaml",
+      "SortBy": 0,
+      "VariablesSectionElementsOrder": [
+        "responseStatus&Sequence_1",
+        "headers&Sequence_1",
+        "responseAttachment&Sequence_1",
+        "title&30a03713-ccf0-44ac-a28e-74872622c415",
+        "description&30a03713-ccf0-44ac-a28e-74872622c415",
+        "apiResponse&30a03713-ccf0-44ac-a28e-74872622c415",
+        "type&30a03713-ccf0-44ac-a28e-74872622c415"
+      ],
+      "ArgumentsSectionElementsOrder": [],
+      "ConstantsSectionElementsOrder": [],
+      "AddedNamespaces": null
+    }
+  ]
+}

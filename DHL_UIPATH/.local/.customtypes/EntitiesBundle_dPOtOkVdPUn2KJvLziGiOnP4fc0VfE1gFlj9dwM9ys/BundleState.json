@@ -1,0 +1,31 @@
+{
+  "assemblyStates": {
+    "CF3A412C103_Normaliz.R2asuiMo7P1UD3jk1vcmDp": {
+      "namespace": "UiPath.IntegrationService.Activities.SWEntities.CF3A412C103_NormalizedMessage_Trigger.Bundle",
+      "providerName": "CustomEntities",
+      "key": {
+        "name": "UiPath.IntegrationService.Activities.SWEntities.CF3A412C103_NormalizedMessage_Trigger",
+        "hash": "TGFPdGZYVU1WWDdURWJkSzJFR0NjbW5panpxZTM5Nm1BMTVTeFFYOXJNQy9URDJSSWN2NGdMRkhtTEs3US9aTG9kWG1JWllITmFudElxeGhQZHJNM1E9PQ",
+        "assemblyName": "CF3A412C103_Normaliz.R2asuiMo7P1UD3jk1vcmDp"
+      }
+    },
+    "C5A5155832D_FileEven.mwose16pJ2P1RqUbk2kMjCV4": {
+      "namespace": "UiPath.IntegrationService.Activities.SWEntities.C5A5155832D_FileEventField_Trigger.Bundle",
+      "providerName": "CustomEntities",
+      "key": {
+        "name": "UiPath.IntegrationService.Activities.SWEntities.C5A5155832D_FileEventField_Trigger",
+        "hash": "NkNhUjY4bE9BT25YcTI0VlJlU1FaZ3VVRDNQVjllN2pXQjIzeWg1OUg4Yk5nRldxcUt2RUhBUUJxbTNvbmlDU0cydXZtdkg0RWxxQ09KTFp2UTlxWVE9PQ",
+        "assemblyName": "C5A5155832D_FileEven.mwose16pJ2P1RqUbk2kMjCV4"
+      }
+    },
+    "C7E585434AB_text_det.69ZZh30EDSM1OOUcE3uynqa1": {
+      "namespace": "UiPath.IntegrationService.Activities.SWEntities.C7E585434AB_text_detection_Create.Bundle",
+      "providerName": "CustomEntities",
+      "key": {
+        "name": "UiPath.IntegrationService.Activities.SWEntities.C7E585434AB_text_detection_Create",
+        "hash": "Ynp0UFZFZHFvODJJQ2RiRHdZK2p6RFNuR0xIRWU1R1hUSmpVN2t1N1MzR1ZXSWVtN2JnSmxmVUp5R1Rkc2JWUFBpanhOLzc3NGFSYmo5TjF5S3ZETnc9PQ",
+        "assemblyName": "C7E585434AB_text_det.69ZZh30EDSM1OOUcE3uynqa1"
+      }
+    }
+  }
+}
