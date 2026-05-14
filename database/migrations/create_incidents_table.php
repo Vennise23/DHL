@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('description')->nullable();
 
             // Workflow status
-            $table->enum('status', ['draft', 'reviewed', 'published','rejected'])
+            $table->enum('status', ['draft', 'reviewed', 'published', 'rejected'])
                 ->default('draft');
 
             // Priority (important for DHL scenario)
@@ -26,6 +26,7 @@ return new class extends Migration
             // Source channel (RPA requirement)
             $table->enum('source', ['email', 'telegram', 'teams', 'manual', 'rpa'])
                 ->default('manual');
+
 
             // Category for better organization by AI
             $table->string('category')->nullable();
@@ -60,7 +61,7 @@ return new class extends Migration
 
             $table->foreignId('incident_id')->constrained()->onDelete('cascade');
 
-            $table->enum('status', ['draft', 'reviewed', 'published','rejected']);
+            $table->enum('status', ['draft', 'reviewed', 'published', 'rejected']);
 
             $table->foreignId('changed_by')->constrained('users');
 
@@ -70,16 +71,32 @@ return new class extends Migration
         });
 
         Schema::create('rpa_logs', function (Blueprint $table) {
+
             $table->id();
 
-            $table->foreignId('incident_id')->constrained()->onDelete('cascade');
-            $table->string('source_type'); // email, drive, telegram
-            $table->integer('created_count')->default(0);
-            $table->integer('duplicate_count')->default(0);
-            $table->integer('failed_count')->default(0);
+            $table->foreignId('incident_id')
+                ->nullable()
+                ->constrained()
+                ->onDelete('cascade');
+
+            $table->string('source_type');
+
+            $table->string('action');
+            // created
+            // duplicate_skipped
+            // failed
+            // updated
+
+            $table->string('status')->default('success');
+
+            $table->text('message')->nullable();
+
+            $table->string('file_hash')->nullable();
 
             $table->text('log_file_path')->nullable();
+
             $table->string('screenshot_path')->nullable();
+
             $table->string('external_source_id')->nullable();
 
             $table->timestamps();

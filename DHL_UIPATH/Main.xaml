@@ -277,7 +277,7 @@
       <x:Boolean x:Key="ShouldCollapseAll">False</x:Boolean>
     </scg:Dictionary>
   </sap:WorkflowViewStateService.ViewState>
-  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="917.6,3252.8" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="913.6,3604.8" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Name="sender" />
       <Variable x:TypeArguments="x:String" Name="attachmentPath" />
@@ -290,15 +290,30 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:InterruptibleWhile CurrentIndex="{x:Null}" Condition="[true]" DisplayName="Start an infinite loop (while true)" sap:VirtualizedContainerService.HintSize="917.6,672" sap2010:WorkflowViewState.IdRef="InterruptibleWhile_2">
+    <ui:InterruptibleWhile CurrentIndex="{x:Null}" Condition="[true]" DisplayName="Start an infinite loop (while true)" sap:VirtualizedContainerService.HintSize="913.6,1024" sap2010:WorkflowViewState.IdRef="InterruptibleWhile_2">
       <ui:InterruptibleWhile.Body>
-        <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="416,525.6" sap2010:WorkflowViewState.IdRef="Sequence_41">
+        <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="416,877.6" sap2010:WorkflowViewState.IdRef="Sequence_41">
+          <Sequence.Variables>
+            <Variable x:TypeArguments="x:Object" Name="downloadedFile" />
+            <Variable x:TypeArguments="x:Int32" Name="index" />
+            <Variable x:TypeArguments="x:Int32" Name="index_1" />
+          </Sequence.Variables>
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
+          <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" DisplayName="Invoke the 'ResetClobalVariable.xaml' workflow file." sap:VirtualizedContainerService.HintSize="382.4,176" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="ResetGlobalVariable.xaml">
+            <ui:InvokeWorkflowFile.Arguments>
+              <scg:Dictionary x:TypeArguments="x:String, Argument" />
+            </ui:InvokeWorkflowFile.Arguments>
+          </ui:InvokeWorkflowFile>
           <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" DisplayName="Invoke the 'EmailWatcher.xaml' workflow file" sap:VirtualizedContainerService.HintSize="382.4,176" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="EmailWatcher.xaml">
+            <ui:InvokeWorkflowFile.Arguments>
+              <scg:Dictionary x:TypeArguments="x:String, Argument" />
+            </ui:InvokeWorkflowFile.Arguments>
+          </ui:InvokeWorkflowFile>
+          <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" DisplayName="Invoke the 'ResetClobalVariable.xaml' workflow file." sap:VirtualizedContainerService.HintSize="382.4,176" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="ResetGlobalVariable.xaml">
             <ui:InvokeWorkflowFile.Arguments>
               <scg:Dictionary x:TypeArguments="x:String, Argument" />
             </ui:InvokeWorkflowFile.Arguments>
@@ -312,21 +327,21 @@
         </Sequence>
       </ui:InterruptibleWhile.Body>
     </ui:InterruptibleWhile>
-    <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="917.6,384" sap2010:WorkflowViewState.IdRef="CommentOut_10">
+    <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="913.6,384" sap2010:WorkflowViewState.IdRef="CommentOut_10">
       <ui:CommentOut.Body>
-        <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="882.4,273.6" sap2010:WorkflowViewState.IdRef="Sequence_42">
+        <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="878.4,273.6" sap2010:WorkflowViewState.IdRef="Sequence_42">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
-          <Parallel DisplayName="Run two branches in parallel" sap:VirtualizedContainerService.HintSize="848.8,213.6" sap2010:WorkflowViewState.IdRef="Parallel_2">
-            <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" DisplayName="Invoke the 'EmailWatcher.xaml' workflow file." sap:VirtualizedContainerService.HintSize="377.6,144" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="EmailWatcher.xaml">
+          <Parallel DisplayName="Run two branches in parallel" sap:VirtualizedContainerService.HintSize="844.8,213.6" sap2010:WorkflowViewState.IdRef="Parallel_2">
+            <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" DisplayName="Invoke the 'EmailWatcher.xaml' workflow file." sap:VirtualizedContainerService.HintSize="376,144" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="EmailWatcher.xaml">
               <ui:InvokeWorkflowFile.Arguments>
                 <scg:Dictionary x:TypeArguments="x:String, Argument" />
               </ui:InvokeWorkflowFile.Arguments>
             </ui:InvokeWorkflowFile>
-            <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" DisplayName="Invoke the 'DriveWatcher.xaml' workflow file." sap:VirtualizedContainerService.HintSize="377.6,144" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="DriveWatcher.xaml">
+            <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" DisplayName="Invoke the 'DriveWatcher.xaml' workflow file." sap:VirtualizedContainerService.HintSize="375.2,144" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="DriveWatcher.xaml">
               <ui:InvokeWorkflowFile.Arguments>
                 <scg:Dictionary x:TypeArguments="x:String, Argument" />
               </ui:InvokeWorkflowFile.Arguments>
@@ -335,7 +350,7 @@
         </Sequence>
       </ui:CommentOut.Body>
     </ui:CommentOut>
-    <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="917.6,275.2" sap2010:WorkflowViewState.IdRef="CommentOut_8">
+    <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="913.6,275.2" sap2010:WorkflowViewState.IdRef="CommentOut_8">
       <ui:CommentOut.Body>
         <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="467.2,164.8" sap2010:WorkflowViewState.IdRef="Sequence_38">
           <sap:WorkflowViewStateService.ViewState>
@@ -354,17 +369,17 @@
         </Sequence>
       </ui:CommentOut.Body>
     </ui:CommentOut>
-    <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="917.6,1898.4" sap2010:WorkflowViewState.IdRef="CommentOut_9">
+    <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="913.6,1898.4" sap2010:WorkflowViewState.IdRef="CommentOut_9">
       <ui:CommentOut.Body>
-        <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="756,1796.8" sap2010:WorkflowViewState.IdRef="Sequence_39">
+        <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="756.8,1796.8" sap2010:WorkflowViewState.IdRef="Sequence_39">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
-          <ui:InterruptibleWhile CurrentIndex="{x:Null}" Condition="[newestEmail Is Nothing OrElse String.IsNullOrEmpty(newestEmail.Subject)]" DisplayName="While the newest email's subject is empty or null, keep checking for a new email." sap:VirtualizedContainerService.HintSize="722.4,1736.8" sap2010:WorkflowViewState.IdRef="InterruptibleWhile_1">
+          <ui:InterruptibleWhile CurrentIndex="{x:Null}" Condition="[newestEmail Is Nothing OrElse String.IsNullOrEmpty(newestEmail.Subject)]" DisplayName="While the newest email's subject is empty or null, keep checking for a new email." sap:VirtualizedContainerService.HintSize="723.2,1736.8" sap2010:WorkflowViewState.IdRef="InterruptibleWhile_1">
             <ui:InterruptibleWhile.Body>
-              <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="688.8,1599.2" sap2010:WorkflowViewState.IdRef="Sequence_29">
+              <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="689.6,1599.2" sap2010:WorkflowViewState.IdRef="Sequence_29">
                 <Sequence.Variables>
                   <Variable x:TypeArguments="x:Int32" Name="index" />
                 </Sequence.Variables>
@@ -373,7 +388,7 @@
                     <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <uga:WaitForEmailReceivedConnections ConnectionAccountName="{x:Null}" Filter="{x:Null}" AuthScopesInvalid="False" ConnectionId="87deebb8-219e-4d77-9cc1-dbf3a412c103" DisplayName="Wait for a new email to be received in Gmail." sap:VirtualizedContainerService.HintSize="655.2,236" sap2010:WorkflowViewState.IdRef="WaitForEmailReceivedConnections_3" IncludeAttachments="True" JobData="[jobData_1]" MarkAsRead="False" Result="[newestEmail]" UseConnectionService="True" WithAttachmentsOnly="False">
+                <uga:WaitForEmailReceivedConnections ConnectionAccountName="{x:Null}" Filter="{x:Null}" AuthScopesInvalid="False" ConnectionId="87deebb8-219e-4d77-9cc1-dbf3a412c103" DisplayName="Wait for a new email to be received in Gmail." sap:VirtualizedContainerService.HintSize="656,236" sap2010:WorkflowViewState.IdRef="WaitForEmailReceivedConnections_3" IncludeAttachments="True" JobData="[jobData_1]" MarkAsRead="False" Result="[newestEmail]" UseConnectionService="True" WithAttachmentsOnly="False">
                   <usaa:AutopilotCustomInit.CustomInit>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:String x:Key="_BrowserFolder">Inbox</x:String>
@@ -391,7 +406,7 @@
                     </ugagm:FolderArgument>
                   </uga:WaitForEmailReceivedConnections.Folder>
                 </uga:WaitForEmailReceivedConnections>
-                <uga:GetNewestEmailConnections ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" Filter="{x:Null}" FolderIdBackup="{x:Reference __ReferenceID0}" ManualEntryFolder="{x:Null}" QueryFilter="{x:Null}" AllLabels="W3siSWQiOiJDSEFUIiwiTmFtZSI6IkNIQVQiLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IlNFTlQiLCJOYW1lIjoiU0VOVCIsIlR5cGUiOiJzeXN0ZW0ifSx7IklkIjoiSU5CT1giLCJOYW1lIjoiSU5CT1giLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IklNUE9SVEFOVCIsIk5hbWUiOiJJTVBPUlRBTlQiLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IlRSQVNIIiwiTmFtZSI6IlRSQVNIIiwiVHlwZSI6InN5c3RlbSJ9LHsiSWQiOiJEUkFGVCIsIk5hbWUiOiJEUkFGVCIsIlR5cGUiOiJzeXN0ZW0ifSx7IklkIjoiU1BBTSIsIk5hbWUiOiJTUEFNIiwiVHlwZSI6InN5c3RlbSJ9LHsiSWQiOiJDQVRFR09SWV9GT1JVTVMiLCJOYW1lIjoiQ0FURUdPUllfRk9SVU1TIiwiVHlwZSI6InN5c3RlbSJ9LHsiSWQiOiJDQVRFR09SWV9VUERBVEVTIiwiTmFtZSI6IkNBVEVHT1JZX1VQREFURVMiLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IkNBVEVHT1JZX1BFUlNPTkFMIiwiTmFtZSI6IkNBVEVHT1JZX1BFUlNPTkFMIiwiVHlwZSI6InN5c3RlbSJ9LHsiSWQiOiJDQVRFR09SWV9QUk9NT1RJT05TIiwiTmFtZSI6IkNBVEVHT1JZX1BST01PVElPTlMiLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IkNBVEVHT1JZX1NPQ0lBTCIsIk5hbWUiOiJDQVRFR09SWV9TT0NJQUwiLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IllFTExPV19TVEFSIiwiTmFtZSI6IllFTExPV19TVEFSIiwiVHlwZSI6InN5c3RlbSJ9LHsiSWQiOiJTVEFSUkVEIiwiTmFtZSI6IlNUQVJSRUQiLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IlVOUkVBRCIsIk5hbWUiOiJVTlJFQUQiLCJUeXBlIjoic3lzdGVtIn1d" AuthScopesInvalid="False" BrowserFolder="Inbox" BrowserFolderLabelId="INBOX" ConnectionId="87deebb8-219e-4d77-9cc1-dbf3a412c103" DisplayName="Get the newest email from the inbox." FilterSelectionMode="ConditionBuilder" FolderInputSelectionMode="Browse" sap:VirtualizedContainerService.HintSize="655.2,236.8" sap2010:WorkflowViewState.IdRef="GetNewestEmailConnections_3" ImportantOnly="False" MarkAsRead="False" Result="[newestEmail]" StarredOnly="False" UnreadOnly="True" UseConnectionService="True" WithAttachmentsOnly="False">
+                <uga:GetNewestEmailConnections ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" Filter="{x:Null}" FolderIdBackup="{x:Reference __ReferenceID0}" ManualEntryFolder="{x:Null}" QueryFilter="{x:Null}" AllLabels="W3siSWQiOiJDSEFUIiwiTmFtZSI6IkNIQVQiLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IlNFTlQiLCJOYW1lIjoiU0VOVCIsIlR5cGUiOiJzeXN0ZW0ifSx7IklkIjoiSU5CT1giLCJOYW1lIjoiSU5CT1giLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IklNUE9SVEFOVCIsIk5hbWUiOiJJTVBPUlRBTlQiLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IlRSQVNIIiwiTmFtZSI6IlRSQVNIIiwiVHlwZSI6InN5c3RlbSJ9LHsiSWQiOiJEUkFGVCIsIk5hbWUiOiJEUkFGVCIsIlR5cGUiOiJzeXN0ZW0ifSx7IklkIjoiU1BBTSIsIk5hbWUiOiJTUEFNIiwiVHlwZSI6InN5c3RlbSJ9LHsiSWQiOiJDQVRFR09SWV9GT1JVTVMiLCJOYW1lIjoiQ0FURUdPUllfRk9SVU1TIiwiVHlwZSI6InN5c3RlbSJ9LHsiSWQiOiJDQVRFR09SWV9VUERBVEVTIiwiTmFtZSI6IkNBVEVHT1JZX1VQREFURVMiLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IkNBVEVHT1JZX1BFUlNPTkFMIiwiTmFtZSI6IkNBVEVHT1JZX1BFUlNPTkFMIiwiVHlwZSI6InN5c3RlbSJ9LHsiSWQiOiJDQVRFR09SWV9QUk9NT1RJT05TIiwiTmFtZSI6IkNBVEVHT1JZX1BST01PVElPTlMiLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IkNBVEVHT1JZX1NPQ0lBTCIsIk5hbWUiOiJDQVRFR09SWV9TT0NJQUwiLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IllFTExPV19TVEFSIiwiTmFtZSI6IllFTExPV19TVEFSIiwiVHlwZSI6InN5c3RlbSJ9LHsiSWQiOiJTVEFSUkVEIiwiTmFtZSI6IlNUQVJSRUQiLCJUeXBlIjoic3lzdGVtIn0seyJJZCI6IlVOUkVBRCIsIk5hbWUiOiJVTlJFQUQiLCJUeXBlIjoic3lzdGVtIn1d" AuthScopesInvalid="False" BrowserFolder="Inbox" BrowserFolderLabelId="INBOX" ConnectionId="87deebb8-219e-4d77-9cc1-dbf3a412c103" DisplayName="Get the newest email from the inbox." FilterSelectionMode="ConditionBuilder" FolderInputSelectionMode="Browse" sap:VirtualizedContainerService.HintSize="656,236.8" sap2010:WorkflowViewState.IdRef="GetNewestEmailConnections_3" ImportantOnly="False" MarkAsRead="False" Result="[newestEmail]" StarredOnly="False" UnreadOnly="True" UseConnectionService="True" WithAttachmentsOnly="False">
                   <usaa:AutopilotCustomInit.CustomInit>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:String x:Key="_BrowserFolder">Inbox</x:String>
@@ -416,9 +431,9 @@
                     </ugagm:FolderArgument>
                   </uga:GetNewestEmailConnections.Folder>
                 </uga:GetNewestEmailConnections>
-                <If Condition="[Not String.IsNullOrEmpty(newestEmail.Subject)]" DisplayName="If the newest email's subject is not empty or null, break the loop." sap:VirtualizedContainerService.HintSize="655.2,1066.4" sap2010:WorkflowViewState.IdRef="If_4">
+                <If Condition="[Not String.IsNullOrEmpty(newestEmail.Subject)]" DisplayName="If the newest email's subject is not empty or null, break the loop." sap:VirtualizedContainerService.HintSize="656,1066.4" sap2010:WorkflowViewState.IdRef="If_4">
                   <If.Then>
-                    <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="621.6,815.2" sap2010:WorkflowViewState.IdRef="Sequence_26">
+                    <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="622.4,815.2" sap2010:WorkflowViewState.IdRef="Sequence_26">
                       <Sequence.Variables>
                         <Variable x:TypeArguments="x:Int32" Name="index" />
                       </Sequence.Variables>
@@ -427,13 +442,13 @@
                           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                         </scg:Dictionary>
                       </sap:WorkflowViewStateService.ViewState>
-                      <Sequence DisplayName="Download the content of the new Gmail email, including its subject, body, and attachments." sap:VirtualizedContainerService.HintSize="588,755.2" sap2010:WorkflowViewState.IdRef="Sequence_27">
+                      <Sequence DisplayName="Download the content of the new Gmail email, including its subject, body, and attachments." sap:VirtualizedContainerService.HintSize="588.8,755.2" sap2010:WorkflowViewState.IdRef="Sequence_27">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                           </scg:Dictionary>
                         </sap:WorkflowViewStateService.ViewState>
-                        <Assign DisplayName="Assign the email's subject to a variable named 'title'." sap:VirtualizedContainerService.HintSize="554.4,113.6" sap2010:WorkflowViewState.IdRef="Assign_18">
+                        <Assign DisplayName="Assign the email's subject to a variable named 'title'." sap:VirtualizedContainerService.HintSize="555.2,113.6" sap2010:WorkflowViewState.IdRef="Assign_18">
                           <Assign.To>
                             <OutArgument x:TypeArguments="x:String">[GlobalVariablesNamespace.GlobalVariables.title]</OutArgument>
                           </Assign.To>
@@ -441,7 +456,7 @@
                             <InArgument x:TypeArguments="x:String">[newestEmail.Subject]</InArgument>
                           </Assign.Value>
                         </Assign>
-                        <Assign DisplayName="Assign the email's body to a variable named 'description'." sap:VirtualizedContainerService.HintSize="554.4,113.6" sap2010:WorkflowViewState.IdRef="Assign_19">
+                        <Assign DisplayName="Assign the email's body to a variable named 'description'." sap:VirtualizedContainerService.HintSize="555.2,113.6" sap2010:WorkflowViewState.IdRef="Assign_19">
                           <Assign.To>
                             <OutArgument x:TypeArguments="x:String">[GlobalVariablesNamespace.GlobalVariables.description]</OutArgument>
                           </Assign.To>
@@ -449,7 +464,7 @@
                             <InArgument x:TypeArguments="x:String">[newestEmail.Body]</InArgument>
                           </Assign.Value>
                         </Assign>
-                        <ui:HttpClient Body="{x:Null}" ClientCertificate="{x:Null}" ClientCertificatePassword="{x:Null}" ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" FileAttachments="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" Password="{x:Null}" ResourcePath="{x:Null}" ResponseAttachment="{x:Null}" ResponseHeaders="{x:Null}" SecureClientCertificatePassword="{x:Null}" SecurePassword="{x:Null}" StatusCode="{x:Null}" Username="{x:Null}" AcceptFormat="JSON" AuthenticationType="None" BodyFormat="application/json" DisplayName="Construct an HTTP request payload and send it to the Laravel API." EnableSSLVerification="True" EndPoint="http://127.0.0.1:8000/api/rpa/incidents" sap:VirtualizedContainerService.HintSize="554.4,103.2" sap2010:WorkflowViewState.IdRef="HttpClient_2" Method="POST" Result="[GlobalVariablesNamespace.GlobalVariables.apiResponse]" TimeoutMS="6000">
+                        <ui:HttpClient Body="{x:Null}" ClientCertificate="{x:Null}" ClientCertificatePassword="{x:Null}" ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" FileAttachments="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" Password="{x:Null}" ResourcePath="{x:Null}" ResponseAttachment="{x:Null}" ResponseHeaders="{x:Null}" SecureClientCertificatePassword="{x:Null}" SecurePassword="{x:Null}" StatusCode="{x:Null}" Username="{x:Null}" AcceptFormat="JSON" AuthenticationType="None" BodyFormat="application/json" DisplayName="Construct an HTTP request payload and send it to the Laravel API." EnableSSLVerification="True" EndPoint="http://127.0.0.1:8000/api/rpa/incidents" sap:VirtualizedContainerService.HintSize="555.2,103.2" sap2010:WorkflowViewState.IdRef="HttpClient_2" Method="POST" Result="[GlobalVariablesNamespace.GlobalVariables.apiResponse]" TimeoutMS="6000">
                           <ui:HttpClient.Attachments>
                             <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
                           </ui:HttpClient.Attachments>
@@ -468,8 +483,8 @@
                             <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
                           </ui:HttpClient.UrlSegments>
                         </ui:HttpClient>
-                        <uga:MarkAsReadUnreadConnections ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" AuthScopesInvalid="False" ConnectionId="87deebb8-219e-4d77-9cc1-dbf3a412c103" DisplayName="Mark Email as Read or Unread" Email="[newestEmail]" sap:VirtualizedContainerService.HintSize="554.4,236.8" sap2010:WorkflowViewState.IdRef="MarkAsReadUnreadConnections_3" MarkAs="Read" UseConnectionService="True" />
-                        <Assign DisplayName="Assign an empty email object to the variable 'newestEmail'." sap:VirtualizedContainerService.HintSize="554.4,104.8" sap2010:WorkflowViewState.IdRef="Assign_22">
+                        <uga:MarkAsReadUnreadConnections ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" AuthScopesInvalid="False" ConnectionId="87deebb8-219e-4d77-9cc1-dbf3a412c103" DisplayName="Mark Email as Read or Unread" Email="[newestEmail]" sap:VirtualizedContainerService.HintSize="555.2,236.8" sap2010:WorkflowViewState.IdRef="MarkAsReadUnreadConnections_3" MarkAs="Read" UseConnectionService="True" />
+                        <Assign DisplayName="Assign an empty email object to the variable 'newestEmail'." sap:VirtualizedContainerService.HintSize="555.2,104.8" sap2010:WorkflowViewState.IdRef="Assign_22">
                           <Assign.To>
                             <OutArgument x:TypeArguments="ugm:GmailMessage">[newestEmail]</OutArgument>
                           </Assign.To>

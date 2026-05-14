@@ -121,6 +121,7 @@
       <x:String>UiPath.Sdk.Activities.DependencyInjection.Contracts</x:String>
       <x:String>UiPath.Sdk.Activities.DependencyInjection</x:String>
       <x:String>UiPath.GSuite</x:String>
+      <x:String>UiPath.Platform</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -243,13 +244,14 @@
       <AssemblyReference>UiPath.IntegrationService.Activities.Runtime</AssemblyReference>
       <AssemblyReference>C7E585434AB_text_det.69ZZh30EDSM1OOUcE3uynqa1</AssemblyReference>
       <AssemblyReference>UiPath.System.Activities.Design</AssemblyReference>
+      <AssemblyReference>UiPath.Persistence.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.CodedWorkflows</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="DriveWatcher" sap:VirtualizedContainerService.HintSize="892.0000000000001,7232" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="DriveWatcher" sap:VirtualizedContainerService.HintSize="850.4000000000001,7572.8" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="scg:List(x:String)" Name="processedFileIds" />
       <Variable x:TypeArguments="ugdm:GDriveRemoteItem[]" Name="driveFiles" />
-      <Variable x:TypeArguments="ugdm:GDriveLocalItem" Name="downloadedFile" />
       <Variable x:TypeArguments="x:String" Name="extractedContent" />
       <Variable x:TypeArguments="uiascb:text_detection_Create" Name="textAnnotations">
         <sap:WorkflowViewStateService.ViewState>
@@ -308,13 +310,13 @@
         </ugam:DriveItemArgument>
       </uga:GetFileListConnections.Item>
     </uga:GetFileListConnections>
-    <ui:ForEach x:TypeArguments="ugdm:GDriveRemoteItem" CurrentIndex="{x:Null}" DisplayName="For each file in the current list of Google Drive files:" sap:VirtualizedContainerService.HintSize="838.4,3334.4" sap2010:WorkflowViewState.IdRef="ForEach`1_3" Values="[driveFiles]">
+    <ui:ForEach x:TypeArguments="ugdm:GDriveRemoteItem" CurrentIndex="{x:Null}" DisplayName="For each file in the current list of Google Drive files:" sap:VirtualizedContainerService.HintSize="838.4,3675.2" sap2010:WorkflowViewState.IdRef="ForEach`1_3" Values="[driveFiles]">
       <ui:ForEach.Body>
         <ActivityAction x:TypeArguments="ugdm:GDriveRemoteItem">
           <ActivityAction.Argument>
             <DelegateInArgument x:TypeArguments="ugdm:GDriveRemoteItem" Name="currentItem" />
           </ActivityAction.Argument>
-          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="736,3188" sap2010:WorkflowViewState.IdRef="Sequence_31">
+          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="736,3528.8" sap2010:WorkflowViewState.IdRef="Sequence_31">
             <Sequence.Variables>
               <Variable x:TypeArguments="x:Int32" Name="index" />
               <Variable x:TypeArguments="x:Int32" Name="index_1" />
@@ -334,15 +336,15 @@
                 <InArgument x:TypeArguments="x:String">Incident from Drive</InArgument>
               </Assign.Value>
             </Assign>
-            <If Condition="[Not processedFileIds.Contains(currentItem.ID)]" DisplayName="If the file is new (its ID is not in the list of previously processed file IDs):" sap:VirtualizedContainerService.HintSize="702.4,2900.8" sap2010:WorkflowViewState.IdRef="If_8">
+            <If Condition="[Not processedFileIds.Contains(currentItem.ID)]" DisplayName="If the file is new (its ID is not in the list of previously processed file IDs):" sap:VirtualizedContainerService.HintSize="702.4,3241.6" sap2010:WorkflowViewState.IdRef="If_8">
               <If.Then>
-                <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="668.8,2640.8" sap2010:WorkflowViewState.IdRef="Sequence_29">
+                <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="668.8,2981.6" sap2010:WorkflowViewState.IdRef="Sequence_29">
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
-                  <uga:DownloadFileConnections BrowserFileId="{x:Null}" ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" DestinationPath="{x:Null}" FileFriendlyName="{x:Null}" ManualEntryFileId="{x:Null}" ManualFileId="{x:Null}" Result="{x:Null}" AuthScopesInvalid="False" ConflictResolution="Fail" ConnectionId="5dba963f-5945-4589-ba47-6d5a5155832d" DisplayName="Download the new file from Google Drive." DownloadDocumentAs="Word" DownloadDrawingAs="Jpeg" DownloadPresentationAs="Ppt" DownloadSpreadsheetAs="Xlsx" File="[currentItem]" FileInputMode="UseExisting" sap:VirtualizedContainerService.HintSize="635.2,184.8" sap2010:WorkflowViewState.IdRef="DownloadFileConnections_3" NewResult="[downloadedFile]" UseConnectionService="True">
+                  <uga:DownloadFileConnections BrowserFileId="{x:Null}" ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" DestinationPath="{x:Null}" FileFriendlyName="{x:Null}" ManualEntryFileId="{x:Null}" ManualFileId="{x:Null}" Result="{x:Null}" AuthScopesInvalid="False" ConflictResolution="Fail" ConnectionId="5dba963f-5945-4589-ba47-6d5a5155832d" DisplayName="Download the new file from Google Drive." DownloadDocumentAs="Word" DownloadDrawingAs="Jpeg" DownloadPresentationAs="Ppt" DownloadSpreadsheetAs="Xlsx" File="[currentItem]" FileInputMode="UseExisting" sap:VirtualizedContainerService.HintSize="635.2,184.8" sap2010:WorkflowViewState.IdRef="DownloadFileConnections_3" NewResult="[GlobalVariablesNamespace.GlobalVariables.downloadedFile]" UseConnectionService="True">
                     <uga:DownloadFileConnections.FileIdBackup>
                       <usau:BackupSlot x:TypeArguments="ugade:EDriveItemMode" x:Name="__ReferenceID0" StoredValue="UseExisting">
                         <usau:BackupSlot.BackupValues>
@@ -373,9 +375,9 @@
                       <InArgument x:TypeArguments="x:String">[""]</InArgument>
                     </Assign.Value>
                   </Assign>
-                  <If Condition="[downloadedFile.Extension.ToLower() = &quot;.pdf&quot;]" DisplayName="If the file is a PDF:" sap:VirtualizedContainerService.HintSize="635.2,2000" sap2010:WorkflowViewState.IdRef="If_9">
+                  <If Condition="[GlobalVariablesNamespace.GlobalVariables.downloadedFile.Extension.ToLower() = &quot;.pdf&quot;]" DisplayName="If the file is a PDF:" sap:VirtualizedContainerService.HintSize="635.2,2340.8" sap2010:WorkflowViewState.IdRef="If_9">
                     <If.Then>
-                      <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="467.2,400.8" sap2010:WorkflowViewState.IdRef="Sequence_23">
+                      <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="467.2,514.4" sap2010:WorkflowViewState.IdRef="Sequence_23">
                         <Sequence.Variables>
                           <Variable x:TypeArguments="x:String" Name="description" />
                           <Variable x:TypeArguments="x:String" Name="type" />
@@ -386,7 +388,15 @@
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                           </scg:Dictionary>
                         </sap:WorkflowViewStateService.ViewState>
-                        <uisape:ExtractPDFText FilePassword="{x:Null}" OcrEngine="{x:Null}" ApplyOcr="False" DisplayName="Extract text content from the PDF file." sap:VirtualizedContainerService.HintSize="433.6,122.4" sap2010:WorkflowViewState.IdRef="ExtractPDFText_2" PdfFile="[downloadedFile]" Text="[extractedContent]" />
+                        <uisape:ExtractPDFText FilePassword="{x:Null}" OcrEngine="{x:Null}" ApplyOcr="False" DisplayName="Extract text content from the PDF file." sap:VirtualizedContainerService.HintSize="433.6,122.4" sap2010:WorkflowViewState.IdRef="ExtractPDFText_2" PdfFile="[GlobalVariablesNamespace.GlobalVariables.downloadedFile]" Text="[extractedContent]" />
+                        <Assign sap:VirtualizedContainerService.HintSize="433.6,113.6" sap2010:WorkflowViewState.IdRef="Assign_19">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[title]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[GlobalVariablesNamespace.GlobalVariables.downloadedFile.Name]</InArgument>
+                          </Assign.Value>
+                        </Assign>
                         <Assign DisplayName="Assign the extracted information to the 'description' variable." sap:VirtualizedContainerService.HintSize="433.6,113.6" sap2010:WorkflowViewState.IdRef="Assign_11">
                           <Assign.To>
                             <OutArgument x:TypeArguments="x:String">[description]</OutArgument>
@@ -406,15 +416,15 @@
                       </Sequence>
                     </If.Then>
                     <If.Else>
-                      <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="601.6,1428.8" sap2010:WorkflowViewState.IdRef="Sequence_28">
+                      <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="601.6,1656" sap2010:WorkflowViewState.IdRef="Sequence_28">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                           </scg:Dictionary>
                         </sap:WorkflowViewStateService.ViewState>
-                        <If Condition="[New List(Of String) From {&#xA;                &quot;.png&quot;,&#xA;                &quot;.jpg&quot;,&#xA;                &quot;.jpeg&quot;,&#xA;                &quot;.bmp&quot;&#xA;            }.Contains(downloadedFile.Extension.ToLower())]" DisplayName="Else if the file is an image:" sap:VirtualizedContainerService.HintSize="568,1368.8" sap2010:WorkflowViewState.IdRef="If_10">
+                        <If Condition="[New List(Of String) From {&#xA;                &quot;.png&quot;,&#xA;                &quot;.jpg&quot;,&#xA;                &quot;.jpeg&quot;,&#xA;                &quot;.bmp&quot;&#xA;            }.Contains(GlobalVariablesNamespace.GlobalVariables.downloadedFile.Extension.ToLower())]" DisplayName="Else if the file is an image:" sap:VirtualizedContainerService.HintSize="568,1596" sap2010:WorkflowViewState.IdRef="If_10">
                           <If.Then>
-                            <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="467.2,494.4" sap2010:WorkflowViewState.IdRef="Sequence_24">
+                            <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="467.2,608" sap2010:WorkflowViewState.IdRef="Sequence_24">
                               <Sequence.Variables>
                                 <Variable x:TypeArguments="x:String" Name="description" />
                                 <Variable x:TypeArguments="x:String" Name="type" />
@@ -434,7 +444,7 @@
                                   </isactr:FieldObject>
                                   <isactr:FieldObject Name="_file" Type="FieldArgument">
                                     <isactr:FieldObject.Value>
-                                      <InArgument x:TypeArguments="upr:IResource" />
+                                      <InArgument x:TypeArguments="upr:IResource">[GlobalVariablesNamespace.GlobalVariables.downloadedFile]</InArgument>
                                     </isactr:FieldObject.Value>
                                   </isactr:FieldObject>
                                   <isactr:FieldObject Name="googleBucketUri" Type="FieldArgument">
@@ -454,6 +464,14 @@
                                   </isactr:FieldObject>
                                 </isactr:ConnectorActivity.FieldObjects>
                               </isactr:ConnectorActivity>
+                              <Assign sap:VirtualizedContainerService.HintSize="433.6,113.6" sap2010:WorkflowViewState.IdRef="Assign_20">
+                                <Assign.To>
+                                  <OutArgument x:TypeArguments="x:String">[title]</OutArgument>
+                                </Assign.To>
+                                <Assign.Value>
+                                  <InArgument x:TypeArguments="x:String">[GlobalVariablesNamespace.GlobalVariables.downloadedFile.Name]</InArgument>
+                                </Assign.Value>
+                              </Assign>
                               <Assign DisplayName="Assign the extracted content to a variable named 'description'." sap:VirtualizedContainerService.HintSize="433.6,113.6" sap2010:WorkflowViewState.IdRef="Assign_13">
                                 <Assign.To>
                                   <OutArgument x:TypeArguments="x:String">[description]</OutArgument>
@@ -473,15 +491,15 @@
                             </Sequence>
                           </If.Then>
                           <If.Else>
-                            <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="534.4,712.8" sap2010:WorkflowViewState.IdRef="Sequence_27">
+                            <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="534.4,826.4" sap2010:WorkflowViewState.IdRef="Sequence_27">
                               <sap:WorkflowViewStateService.ViewState>
                                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                                 </scg:Dictionary>
                               </sap:WorkflowViewStateService.ViewState>
-                              <If Condition="[downloadedFile.Extension.ToLower() = &quot;.txt&quot;]" DisplayName="Else if the file is a text file:" sap:VirtualizedContainerService.HintSize="500.8,652.8" sap2010:WorkflowViewState.IdRef="If_11">
+                              <If Condition="[GlobalVariablesNamespace.GlobalVariables.downloadedFile.Extension.ToLower() = &quot;.txt&quot;]" DisplayName="Else if the file is a text file:" sap:VirtualizedContainerService.HintSize="500.8,766.4" sap2010:WorkflowViewState.IdRef="If_11">
                                 <If.Then>
-                                  <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="467.2,401.6" sap2010:WorkflowViewState.IdRef="Sequence_25">
+                                  <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="467.2,515.2" sap2010:WorkflowViewState.IdRef="Sequence_25">
                                     <Sequence.Variables>
                                       <Variable x:TypeArguments="x:String" Name="description" />
                                       <Variable x:TypeArguments="x:String" Name="type" />
@@ -492,7 +510,15 @@
                                         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                                       </scg:Dictionary>
                                     </sap:WorkflowViewStateService.ViewState>
-                                    <ui:ReadTextFile FileName="{x:Null}" Content="[extractedContent]" DisplayName="Read the content of the text file." File="[downloadedFile]" sap:VirtualizedContainerService.HintSize="433.6,123.2" sap2010:WorkflowViewState.IdRef="ReadTextFile_2" />
+                                    <ui:ReadTextFile FileName="{x:Null}" Content="[extractedContent]" DisplayName="Read the content of the text file." File="[GlobalVariablesNamespace.GlobalVariables.downloadedFile]" sap:VirtualizedContainerService.HintSize="433.6,123.2" sap2010:WorkflowViewState.IdRef="ReadTextFile_2" />
+                                    <Assign sap:VirtualizedContainerService.HintSize="433.6,113.6" sap2010:WorkflowViewState.IdRef="Assign_21">
+                                      <Assign.To>
+                                        <OutArgument x:TypeArguments="x:String">[title]</OutArgument>
+                                      </Assign.To>
+                                      <Assign.Value>
+                                        <InArgument x:TypeArguments="x:String">[GlobalVariablesNamespace.GlobalVariables.downloadedFile.Name]</InArgument>
+                                      </Assign.Value>
+                                    </Assign>
                                     <Assign DisplayName="Assign the read content to a variable named 'description'." sap:VirtualizedContainerService.HintSize="433.6,113.6" sap2010:WorkflowViewState.IdRef="Assign_15">
                                       <Assign.To>
                                         <OutArgument x:TypeArguments="x:String">[description]</OutArgument>
@@ -609,7 +635,7 @@
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                           </scg:Dictionary>
                         </sap:WorkflowViewStateService.ViewState>
-                        <uga:DownloadFileConnections BrowserFileId="{x:Null}" ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" DestinationPath="{x:Null}" FileFriendlyName="{x:Null}" ManualEntryFileId="{x:Null}" ManualFileId="{x:Null}" Result="{x:Null}" AuthScopesInvalid="False" ConflictResolution="Fail" ConnectionId="5dba963f-5945-4589-ba47-6d5a5155832d" DisplayName="Download the new file from Google Drive." DownloadDocumentAs="Word" DownloadDrawingAs="Jpeg" DownloadPresentationAs="Ppt" DownloadSpreadsheetAs="Xlsx" File="[currentItem]" FileInputMode="UseExisting" sap:VirtualizedContainerService.HintSize="635.2,184.8" sap2010:WorkflowViewState.IdRef="DownloadFileConnections_1" NewResult="[downloadedFile]" UseConnectionService="True">
+                        <uga:DownloadFileConnections BrowserFileId="{x:Null}" ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" DestinationPath="{x:Null}" FileFriendlyName="{x:Null}" ManualEntryFileId="{x:Null}" ManualFileId="{x:Null}" Result="{x:Null}" AuthScopesInvalid="False" ConflictResolution="Fail" ConnectionId="5dba963f-5945-4589-ba47-6d5a5155832d" DisplayName="Download the new file from Google Drive." DownloadDocumentAs="Word" DownloadDrawingAs="Jpeg" DownloadPresentationAs="Ppt" DownloadSpreadsheetAs="Xlsx" File="[currentItem]" FileInputMode="UseExisting" sap:VirtualizedContainerService.HintSize="635.2,184.8" sap2010:WorkflowViewState.IdRef="DownloadFileConnections_1" NewResult="[GlobalVariablesNamespace.GlobalVariables.downloadedFile]" UseConnectionService="True">
                           <uga:DownloadFileConnections.FileIdBackup>
                             <usau:BackupSlot x:TypeArguments="ugade:EDriveItemMode" x:Name="__ReferenceID1" StoredValue="UseExisting">
                               <usau:BackupSlot.BackupValues>
@@ -640,7 +666,7 @@
                             <InArgument x:TypeArguments="x:String">[""]</InArgument>
                           </Assign.Value>
                         </Assign>
-                        <If Condition="[downloadedFile.Extension.ToLower() = &quot;.pdf&quot;]" DisplayName="If the file is a PDF:" sap:VirtualizedContainerService.HintSize="635.2,2000" sap2010:WorkflowViewState.IdRef="If_2">
+                        <If Condition="[GlobalVariablesNamespace.GlobalVariables.downloadedFile.Extension.ToLower() = &quot;.pdf&quot;]" DisplayName="If the file is a PDF:" sap:VirtualizedContainerService.HintSize="635.2,2000" sap2010:WorkflowViewState.IdRef="If_2">
                           <If.Then>
                             <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="467.2,400.8" sap2010:WorkflowViewState.IdRef="Sequence_3">
                               <Sequence.Variables>
@@ -653,7 +679,7 @@
                                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                                 </scg:Dictionary>
                               </sap:WorkflowViewStateService.ViewState>
-                              <uisape:ExtractPDFText FilePassword="{x:Null}" OcrEngine="{x:Null}" ApplyOcr="False" DisplayName="Extract text content from the PDF file." sap:VirtualizedContainerService.HintSize="433.6,122.4" sap2010:WorkflowViewState.IdRef="ExtractPDFText_1" PdfFile="[downloadedFile]" Text="[extractedContent]" />
+                              <uisape:ExtractPDFText FilePassword="{x:Null}" OcrEngine="{x:Null}" ApplyOcr="False" DisplayName="Extract text content from the PDF file." sap:VirtualizedContainerService.HintSize="433.6,122.4" sap2010:WorkflowViewState.IdRef="ExtractPDFText_1" PdfFile="[GlobalVariablesNamespace.GlobalVariables.downloadedFile]" Text="[extractedContent]" />
                               <Assign DisplayName="Assign the extracted information to the 'description' variable." sap:VirtualizedContainerService.HintSize="433.6,113.6" sap2010:WorkflowViewState.IdRef="Assign_4">
                                 <Assign.To>
                                   <OutArgument x:TypeArguments="x:String">[description]</OutArgument>
@@ -679,7 +705,7 @@
                                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                                 </scg:Dictionary>
                               </sap:WorkflowViewStateService.ViewState>
-                              <If Condition="[New List(Of String) From {&#xA;                &quot;.png&quot;,&#xA;                &quot;.jpg&quot;,&#xA;                &quot;.jpeg&quot;,&#xA;                &quot;.bmp&quot;&#xA;            }.Contains(downloadedFile.Extension.ToLower())]" DisplayName="Else if the file is an image:" sap:VirtualizedContainerService.HintSize="568,1368.8" sap2010:WorkflowViewState.IdRef="If_3">
+                              <If Condition="[New List(Of String) From {&#xA;                &quot;.png&quot;,&#xA;                &quot;.jpg&quot;,&#xA;                &quot;.jpeg&quot;,&#xA;                &quot;.bmp&quot;&#xA;            }.Contains(GlobalVariablesNamespace.GlobalVariables.downloadedFile.Extension.ToLower())]" DisplayName="Else if the file is an image:" sap:VirtualizedContainerService.HintSize="568,1368.8" sap2010:WorkflowViewState.IdRef="If_3">
                                 <If.Then>
                                   <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="467.2,494.4" sap2010:WorkflowViewState.IdRef="Sequence_9">
                                     <Sequence.Variables>
@@ -746,7 +772,7 @@
                                         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                                       </scg:Dictionary>
                                     </sap:WorkflowViewStateService.ViewState>
-                                    <If Condition="[downloadedFile.Extension.ToLower() = &quot;.txt&quot;]" DisplayName="Else if the file is a text file:" sap:VirtualizedContainerService.HintSize="500.8,652.8" sap2010:WorkflowViewState.IdRef="If_4">
+                                    <If Condition="[GlobalVariablesNamespace.GlobalVariables.downloadedFile.Extension.ToLower() = &quot;.txt&quot;]" DisplayName="Else if the file is a text file:" sap:VirtualizedContainerService.HintSize="500.8,652.8" sap2010:WorkflowViewState.IdRef="If_4">
                                       <If.Then>
                                         <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="467.2,401.6" sap2010:WorkflowViewState.IdRef="Sequence_11">
                                           <Sequence.Variables>
@@ -759,7 +785,7 @@
                                               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                                             </scg:Dictionary>
                                           </sap:WorkflowViewStateService.ViewState>
-                                          <ui:ReadTextFile FileName="{x:Null}" Content="[extractedContent]" DisplayName="Read the content of the text file." File="[downloadedFile]" sap:VirtualizedContainerService.HintSize="433.6,123.2" sap2010:WorkflowViewState.IdRef="ReadTextFile_1" />
+                                          <ui:ReadTextFile FileName="{x:Null}" Content="[extractedContent]" DisplayName="Read the content of the text file." File="[GlobalVariablesNamespace.GlobalVariables.downloadedFile]" sap:VirtualizedContainerService.HintSize="433.6,123.2" sap2010:WorkflowViewState.IdRef="ReadTextFile_1" />
                                           <Assign DisplayName="Assign the read content to a variable named 'description'." sap:VirtualizedContainerService.HintSize="433.6,113.6" sap2010:WorkflowViewState.IdRef="Assign_8">
                                             <Assign.To>
                                               <OutArgument x:TypeArguments="x:String">[description]</OutArgument>

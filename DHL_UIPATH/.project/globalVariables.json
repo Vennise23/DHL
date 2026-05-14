@@ -30,5 +30,13 @@
     "UnresolvedTypeFullyQualifiedName": null,
     "Expression": null,
     "IsLiteral": false
+  },
+  {
+    "Constant": false,
+    "Name": "downloadedFile",
+    "TypeFullyQualifiedName": "UiPath.GSuite.Drive.Models.GDriveLocalItem, UiPath.GSuite, Version=3.9.0.0, Culture=neutral, PublicKeyToken=null",
+    "UnresolvedTypeFullyQualifiedName": null,
+    "Expression": null,
+    "IsLiteral": false
   }
 ]

@@ -22,6 +22,7 @@ class IncidentFactory extends Factory
                 'system error',
                 'customer complaint'
             ]),
+            'content_hash' => fake()->sha256(),
             'created_by' => User::factory(), // link to user
             'assigned_to' => User::factory(), // link to user
             'updated_at' => now(),

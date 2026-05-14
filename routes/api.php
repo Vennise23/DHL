@@ -54,6 +54,9 @@ Route::middleware(['auth:sanctum', 'role:staff'])->group(function () {
 });
 // Rpa can create incidents and view rpa logs
 Route::post('/rpa/incidents', [IncidentController::class, 'storeRPA']);
+Route::post('/rpa/check-duplicate', [IncidentController::class, 'checkDuplicateRPA']);
+Route::post('/rpa/addDupplicateLog', [IncidentController::class, 'addDuplicateRPA']);
+Route::post('/rpa/failure', [IncidentController::class, 'logRPAFailure']);
 Route::get('/incidents/{id}/rpa-logs', [IncidentController::class, 'viewRpaLogs']);
 
 

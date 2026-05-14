@@ -16,21 +16,27 @@ class RpaLogSeeder extends Seeder
         DB::table('rpa_logs')->insert([
             [
                 'source_type' => 'email',
-                'created_count' => 5,
-                'duplicate_count' => 1,
-                'failed_count' => 0,
+                'action' => 'create_incident',
+                'status' => 'success',
+                'message' => 'Incident created successfully',
+                'file_hash' => hash('sha256', 'sample log content'),
                 'log_file_path' => '/logs/rpa_email_001.txt',
+                'screenshot_path' => '/screenshots/rpa_email_001.png',
+                'external_source_id' => 'email-12345',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'source_type' => 'telegram',
-                'created_count' => 3,
-                'duplicate_count' => 0,
-                'failed_count' => 1,
+                'action' => 'create_incident',
+                'status' => 'failed',
+                'message' => 'Failed to create incident',
+                'file_hash' => hash('sha256', 'sample log content'),
                 'log_file_path' => '/logs/rpa_telegram_001.txt',
+                'screenshot_path' => '/screenshots/rpa_telegram_001.png',
+                'external_source_id' => 'telegram-67890',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now()   
             ]
         ]);
     }

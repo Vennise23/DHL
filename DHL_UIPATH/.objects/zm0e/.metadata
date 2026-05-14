@@ -1,0 +1,12 @@
+﻿{
+  "Name": "Edge UiPath GSuite Error Fix",
+  "Type": "App",
+  "Id": "zm0eCCPjxE6CGDm6HC4l5w",
+  "Reference": "OhuESjG14UiYHHydHLVEow/zm0eCCPjxE6CGDm6HC4l5w",
+  "Created": "2026-05-14T04:43:41.5188589Z",
+  "Updated": "2026-05-14T04:43:41.5188589Z",
+  "CreatedBy": [
+    "UiPath.UIAutomationCore, Version=25.10.32.0, Culture=neutral, PublicKeyToken=null",
+    "UiPath.Platform, Version=25.12.1.0, Culture=neutral, PublicKeyToken=null"
+  ]
+}

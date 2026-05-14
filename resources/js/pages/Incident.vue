@@ -582,9 +582,9 @@
                 class="text-sm"
             >
                 <Column field="source_type" header="Source" />
-                <Column field="created_count" header="Created" />
-                <Column field="duplicate_count" header="Duplicate" />
-                <Column field="failed_count" header="Failed" />
+                <Column field="action" header="Action" />
+                <Column field="status" header="Status" />
+                <Column field="message" header="Message" />
             </DataTable>
         </div>
 

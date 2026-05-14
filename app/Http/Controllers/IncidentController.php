@@ -170,7 +170,7 @@ class IncidentController
             $incident = $incidentService->createFromRPA(
                 $request,
                 $botUserId,
-                $request['type'] ?? 'email',
+                $request['type'] ?? 'rpa',
             );
 
             return response()->json([
@@ -184,5 +184,27 @@ class IncidentController
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function checkDuplicateRPA(Request $request, IncidentService $incidentService)
+    {
+        return $incidentService->checkDuplicateFromRPA($request);
+    }
+
+    public function logRPAFailure(Request $request, IncidentService $incidentService)
+    {
+        $request->validate([
+            'source_type' => 'required|string',
+            'action' => 'required|string',
+            'message' => 'nullable|string',
+            'file_hash' => 'nullable|string',
+            'log_file_path' => 'nullable|string',
+            'screenshot_path' => 'nullable|string',
+            'external_source_id' => 'nullable|string',
+        ]);
+
+        $incidentService->logRPAFailure($request);
+
+        return true;
     }
 }

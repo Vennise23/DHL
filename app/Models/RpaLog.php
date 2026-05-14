@@ -11,14 +11,13 @@ class RpaLog extends Model
     protected $fillable = [
         'incident_id',
         'source_type',
-        'created_count',
-        'duplicate_count',
-        'failed_count',
+        'action',
+        'status',
+        'message',
+        'file_hash',
         'log_file_path',
         'screenshot_path',
-        'external_source_id',
-        'created_at',
-        'updated_at',
+        'external_source_id'
     ];
 
     public function incident()

@@ -19,6 +19,7 @@ class Incident extends Model
         'priority',
         'source',
         'category',
+        'content_hash',
         'assigned_to',
         'created_by',
         'updated_by'
